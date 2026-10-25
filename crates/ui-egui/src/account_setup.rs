@@ -968,7 +968,13 @@ impl AccountSetup {
     /// Back on the password page, with what went wrong and the servers in view.
     fn refuse(&mut self, why: String) {
         self.go(Page::Password);
-        self.error = why;
+        self.error = if why.contains("the server took too long to answer") {
+            "Problema de conexão: o servidor demorou demais para responder".to_string()
+        } else if let Some(details) = why.strip_prefix("connection problem: ") {
+            format!("Problema de conexão: {details}")
+        } else {
+            why
+        };
         self.settings_open = true;
     }
 
