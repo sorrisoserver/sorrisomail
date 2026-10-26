@@ -127,13 +127,28 @@ impl<'a> Stream<'a> {
 
 impl Read for Stream<'_> {
     fn read(&mut self, buf: &mut [u8]) -> std::io::Result<usize> {
-        self.before(false)?;
-        let n = match &mut self.io {
-            Io::Plain(tcp) => tcp.read(buf),
-            Io::Tls(tls) => tls.read(buf),
-        }?;
-        self.moved = self.moved.saturating_add(n as u64);
-        Ok(n)
+        // An IMAP server under heavy load can miss one socket read deadline.
+        // Retry a bounded number of reads without repeating the IMAP FETCH command:
+        // reissuing FETCH on a half-read response would desynchronise the protocol.
+        // `before` still enforces the command deadline and cancellation.
+        let mut timeouts = 0u8;
+        loop {
+            self.before(false)?;
+            let result = match &mut self.io {
+                Io::Plain(tcp) => tcp.read(buf),
+                Io::Tls(tls) => tls.read(buf),
+            };
+            match result {
+                Ok(n) => {
+                    self.moved = self.moved.saturating_add(n as u64);
+                    return Ok(n);
+                }
+                Err(e) if matches!(e.kind(), ErrorKind::TimedOut | ErrorKind::WouldBlock) && timeouts < 2 => {
+                    timeouts += 1;
+                }
+                Err(e) => return Err(e),
+            }
+        }
     }
 }
 
