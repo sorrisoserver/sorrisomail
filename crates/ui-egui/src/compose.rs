@@ -226,7 +226,7 @@ pub fn show(app: &mut MailApp, ui: &mut Ui) {
     let title = match c.mode {
         ComposeMode::New => "Nova mensagem",
         ComposeMode::Reply => tl!("Reply"),
-        ComposeMode::ReplyAll => tl!("Reply all"),
+        ComposeMode::ReplyAll => "Responder a todos",
         ComposeMode::Forward => tl!("Forward"),
         ComposeMode::Draft => tl!("Draft"),
     };
