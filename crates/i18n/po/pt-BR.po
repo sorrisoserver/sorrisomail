@@ -1111,7 +1111,7 @@ msgid "No senders are remembered. \"Always download pictures from\" above a mess
 msgstr "Nenhum remetente foi salvo. A opção de sempre baixar imagens de um remetente adiciona seu endereço ou domínio aqui."
 
 msgid "No downloaded pictures are kept on this computer."
-msgstr "Não há imagens baixadas armazenadas neste computador."
+msgstr "Nenhuma imagem baixada está armazenada neste computador."
 
 msgid "The one this build came with"
 msgstr "A identificação incluída nesta versão"
@@ -1637,3 +1637,27 @@ msgstr "Problema de conexão: o servidor demorou demais para responder"
 
 msgid "20 results in {scope}"
 msgstr "20 resultados em {scope}"
+
+msgid "{n} downloaded picture is kept on this computer ({size})."
+msgstr "{n} imagem baixada está armazenada neste computador ({size})."
+
+msgid "{n} downloaded pictures are kept on this computer ({size})."
+msgstr "{n} imagens baixadas estão armazenadas neste computador ({size})."
+
+msgid "Clear"
+msgstr "Limpar"
+
+msgid "Every {n} minutes"
+msgstr "A cada {n} minutos"
+
+msgid "Every minute"
+msgstr "A cada minuto"
+
+msgid "Only when I ask"
+msgstr "Somente manualmente"
+
+msgid "Reply all"
+msgstr "Responder a todos"
+
+msgid "Search emails (e.g. from:, has:attachment, is:unread)"
+msgstr "Pesquisar e-mails (ex.: from:, has:attachment, is:unread)"
