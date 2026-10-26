@@ -37,7 +37,9 @@ const MAX_RUN_BYTES: usize = 256 * 1024 * 1024;
 const MAX_RUN_MESSAGES: usize = 100_000;
 /// The largest message that is downloaded whole. Of a larger one only the header is, and a note
 /// takes the place of its text ([`too_large`]).
-const MAX_MESSAGE: u64 = 25 * 1024 * 1024;
+// Allow complete offline copies of larger attachments, while retaining a bounded
+// per-message allocation. The ultimate maximum still needs load testing.
+const MAX_MESSAGE: u64 = 100 * 1024 * 1024;
 /// Most new messages handed over in one piece, and most bytes of them...
 const BATCH_MESSAGES: usize = 50;
 const BATCH_BYTES: usize = 4 * 1024 * 1024;
