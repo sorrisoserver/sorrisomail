@@ -115,7 +115,7 @@ impl Row {
             RunState::Stopped => tl!("Stopped").to_string(),
             RunState::Done => {
                 if run.new == 0 && run.sent == 0 {
-                    return tl!("Done: up to date").to_string();
+                    return "Concluído: atualizado".to_string();
                 }
                 let mut line = i18n::fmt(tl!("Done: {n} new"), &[("n", &run.new.to_string())]);
                 if run.sent > 0 {
@@ -204,7 +204,7 @@ pub(crate) fn show(app: &mut MailApp, ctx: &egui::Context) {
                     ui.spacing_mut().item_spacing = vec2(8.0, 4.0);
                     // The heading, with Stop while a run goes on, and the way out.
                     ui.horizontal(|ui| {
-                        ui.label(RichText::new(tl!("Send/Receive Progress")).font(semibold(14.0)).color(t.text));
+                        ui.label(RichText::new("Progresso de envio e recebimento").font(semibold(14.0)).color(t.text));
                         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                             let shut = crate::widgets::icon_button(ui, "close", tl!("Close"), 12.0, true);
                             app.hit.add("syncPanelClose", 0, shut.rect);
