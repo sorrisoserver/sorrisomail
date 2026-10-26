@@ -284,6 +284,25 @@ fn info(app: &mut MailApp, ui: &mut Ui, t: &Tokens) {
             (None, false) => tl!("Not kept anywhere yet: use Open & Export › Save Mailbox As.").to_string(),
         };
         ui.label(egui::RichText::new(place).color(t.text_dim));
+        if let Some(path) = &app.session.path {
+            // A mailbox uses an index plus a sibling .blobs directory. Scan only
+            // on demand: walking a 60 GB mailbox on every UI frame would freeze it.
+            let key = ui.id().with("sorriso_mailbox_disk_usage");
+            let current = path.to_string_lossy().to_string();
+            let previous: Option<(String, u64)> = ui.ctx().data(|d| d.get_temp(key));
+            let refresh = ui.button("Atualizar espaço utilizado").clicked();
+            let size = if refresh || previous.as_ref().is_none_or(|(name, _)| *name != current) {
+                let mut blobs = path.as_os_str().to_os_string();
+                blobs.push(".blobs");
+                let amount = mailbox_disk_bytes(path).saturating_add(mailbox_tree_bytes(std::path::Path::new(&blobs)));
+                ui.ctx().data_mut(|d| d.insert_temp(key, (current, amount)));
+                amount
+            } else {
+                previous.map_or(0, |(_, bytes)| bytes)
+            };
+            ui.label(egui::RichText::new(format!("Espaço local utilizado: {:.2} GB ({:.2} GiB)", size as f64 / 1_000_000_000.0, size as f64 / 1_073_741_824.0)).color(t.text));
+        }
+
     }
     section(ui, tl!("Rules and Categories"), t);
     if tile(ui, "rules", tl!("Manage Rules"), tl!("What happens to mail as it arrives"), t) {
@@ -292,6 +311,30 @@ fn info(app: &mut MailApp, ui: &mut Ui, t: &Tokens) {
     if tile(ui, "categorize", tl!("Categories"), tl!("Names and colours for sorting mail, events, people and tasks"), t) {
         let _ = app.run("ui.dialog", json!({"name": "categories"}));
     }
+}
+
+/// Size of an individual file, without reading its contents.
+fn mailbox_disk_bytes(path: &std::path::Path) -> u64 {
+    std::fs::metadata(path).map_or(0, |meta| if meta.is_file() { meta.len() } else { 0 })
+}
+
+/// Walk the content directory iteratively, only when the owner opens or refreshes
+/// the storage view. Never follow directory symlinks outside the mailbox.
+fn mailbox_tree_bytes(root: &std::path::Path) -> u64 {
+    let mut bytes = 0u64;
+    let mut pending = vec![root.to_path_buf()];
+    while let Some(dir) = pending.pop() {
+        let Ok(entries) = std::fs::read_dir(dir) else { continue };
+        for entry in entries.flatten() {
+            let Ok(kind) = entry.file_type() else { continue };
+            if kind.is_dir() {
+                pending.push(entry.path());
+            } else if kind.is_file() {
+                bytes = bytes.saturating_add(mailbox_disk_bytes(&entry.path()));
+            }
+        }
+    }
+    bytes
 }
 
 /// "Download messages in full" for a Microsoft account: everything, or up to a size (larger ones
