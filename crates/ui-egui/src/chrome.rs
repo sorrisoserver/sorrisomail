@@ -69,7 +69,7 @@ const MAC_LIGHTS_LEFT: f32 = 10.0;
 pub const MAC_CONTENT_LEFT: f32 = MAC_LIGHTS_LEFT + 2.0 * MAC_LIGHT_PITCH + MAC_LIGHT + (MAC_TITLE_BAR - MAC_LIGHT) / 2.0;
 
 /// The search box: typing filters the message list as you go; Escape clears it.
-fn search_box(app: &mut MailApp, ui: &mut Ui, rect: Rect) {
+pub(crate) fn search_box(app: &mut MailApp, ui: &mut Ui, rect: Rect) {
     let t = Tokens::get(ui.ctx());
     let id = ui.id().with("search_box");
     let focused = ui.memory(|m| m.has_focus(id));
@@ -220,7 +220,7 @@ pub fn title_bar(app: &mut MailApp, ui: &mut Ui) {
             // The search box, centred, as wide as the space allows.
             let room = (right_start - qat_end - 40.0).max(0.0);
             let w = room.min(520.0);
-            if w >= 220.0 {
+            if w >= 220.0 && app.session.view.module != Module::Mail {
                 let cx = full.center().x.clamp(qat_end + 20.0 + w / 2.0, (right_start - 20.0 - w / 2.0).max(qat_end + 20.0 + w / 2.0));
                 search_box(app, ui, Rect::from_center_size(pos2(cx, full.center().y), vec2(w, search_h)));
             }
