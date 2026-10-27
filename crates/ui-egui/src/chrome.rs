@@ -281,7 +281,7 @@ pub fn sorriso_brand_banner(app: &mut MailApp, ui: &mut Ui) {
                     }
                     ui.add_space(8.0);
                     ui.vertical(|ui| {
-                        ui.label(egui::RichText::new("Sorriso Server Mail").size(25.0).strong().color(egui::Color32::WHITE));
+                        ui.label(egui::RichText::new("SorrisoServer Mail").size(25.0).strong().color(egui::Color32::WHITE));
                         ui.label(egui::RichText::new("Seu e-mail corporativo com a Sorriso Server").size(12.0)
                             .color(egui::Color32::from_rgb(217,239,255)));
                     });
@@ -380,7 +380,7 @@ pub fn sorriso_service_strip(_app: &mut MailApp, ui: &mut Ui) {
         .show(ui, |ui| {
             ui.with_layout(egui::Layout::centered_and_justified(egui::Direction::LeftToRight), |ui| {
                 ui.horizontal_centered(|ui| {
-                    ui.label(egui::RichText::new("Sorriso Server Mail").strong()
+                    ui.label(egui::RichText::new("SorrisoServer Mail").strong()
                         .color(egui::Color32::from_rgb(5, 87, 164)));
                     ui.separator();
                     ui.label("Suporte técnico e atendimento");
