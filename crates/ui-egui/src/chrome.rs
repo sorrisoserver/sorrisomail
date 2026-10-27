@@ -307,47 +307,48 @@ pub fn sorriso_brand_banner(app: &mut MailApp, ui: &mut Ui) {
 
 /// Compact command bar for the SorrisoServer Mail inbox.
 /// Keeps the existing engine actions; there is no separate fake UI state.
+/// Outlook-style command row with visible labels and a separate search row.
 pub fn sorriso_compact_toolbar(app: &mut MailApp, ui: &mut Ui) {
+    let surface = egui::Color32::from_rgb(249, 251, 254);
     egui::Panel::top("sorriso_compact_toolbar")
-        .exact_size(62.0)
+        .exact_size(94.0)
         .show_separator_line(true)
-        .frame(egui::Frame::NONE.fill(egui::Color32::from_rgb(249, 251, 254))
-            .inner_margin(egui::Margin::symmetric(15, 9)))
+        .frame(egui::Frame::NONE.fill(surface).inner_margin(egui::Margin::symmetric(12, 5)))
         .show(ui, |ui| {
+            // Search occupies its own top band and stays discoverable on narrow windows.
+            ui.horizontal(|ui| {
+                ui.label(egui::RichText::new("Pesquisar mensagens").size(12.0).strong()
+                    .color(egui::Color32::from_rgb(57, 76, 105)));
+                ui.add_space(12.0);
+                let w = ui.available_width().min(620.0).max(180.0);
+                let (rect, _) = ui.allocate_exact_size(vec2(w, 30.0), Sense::hover());
+                search_box(app, ui, rect);
+            });
+            ui.add_space(5.0);
             ui.horizontal_centered(|ui| {
-                let primary = egui::Button::new(egui::RichText::new("✎  Novo e-mail").size(15.0).strong()
-                    .color(egui::Color32::WHITE))
-                    .fill(egui::Color32::from_rgb(3, 91, 195))
-                    .corner_radius(7.0).min_size(vec2(150.0, 42.0));
-                if ui.add_enabled(app.enabled("mail.new"), primary).clicked() {
-                    let _ = app.run("mail.new", json!({}));
-                }
-                ui.add_space(7.0);
-                for (symbol, title, command) in [
-                    ("✕", "Excluir", "mail.delete"),
+                ui.spacing_mut().item_spacing.x = 4.0;
+                let actions = [
+                    ("✉", "Novo e-mail", "mail.new"),
+                    ("▤", "Excluir", "mail.delete"),
                     ("▣", "Arquivar", "mail.archive"),
                     ("↶", "Responder", "mail.reply"),
                     ("↶↶", "Responder a todos", "mail.replyAll"),
                     ("↷", "Encaminhar", "mail.forward"),
-                    ("◈", "Lida / não lida", "mail.toggleRead"),
-                    ("⟳", "Sincronizar", "ui.sync"),
-                ] {
-                    let btn = egui::Button::new(egui::RichText::new(symbol).size(21.0)
-                        .color(egui::Color32::from_rgb(45, 83, 128)))
-                        .fill(egui::Color32::from_rgb(239, 244, 250))
-                        .corner_radius(6.0).min_size(vec2(41.0, 41.0));
-                    if ui.add_enabled(app.enabled(command), btn).on_hover_text(title).clicked() {
+                    ("✉", "Não lido/Lido", "mail.toggleRead"),
+                    ("⟳", "Enviar/Receber", "ui.sync"),
+                ];
+                for (glyph, caption, command) in actions {
+                    let text = format!("{glyph}  {caption}");
+                    let is_new = command == "mail.new";
+                    let btn = egui::Button::new(egui::RichText::new(text).size(12.0)
+                        .color(if is_new { egui::Color32::WHITE } else { egui::Color32::from_rgb(40, 62, 91) }))
+                        .fill(if is_new { egui::Color32::from_rgb(5, 94, 191) } else { surface })
+                        .corner_radius(4.0)
+                        .min_size(vec2(0.0, 39.0));
+                    if ui.add_enabled(app.enabled(command), btn).on_hover_text(caption).clicked() {
                         let _ = app.run(command, json!({}));
                     }
                 }
-                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    ui.add_space(4.0);
-                    let available = ui.available_width();
-                    if available >= 185.0 {
-                        let (rect, _) = ui.allocate_exact_size(vec2(available.min(360.0), 40.0), Sense::hover());
-                        search_box(app, ui, rect);
-                    }
-                });
             });
         });
 }
