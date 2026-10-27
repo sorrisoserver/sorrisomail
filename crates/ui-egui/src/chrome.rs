@@ -227,6 +227,32 @@ pub fn title_bar(app: &mut MailApp, ui: &mut Ui) {
         });
 }
 
+/// Sorriso Server service strip. It is deliberately local/static in Alpha:
+/// remote announcements must be authenticated and versioned before enabling them.
+pub fn sorriso_service_strip(app: &mut MailApp, ui: &mut Ui) {
+    egui::Panel::top("sorriso_service_strip")
+        .exact_size(34.0)
+        .show_separator_line(true)
+        .frame(egui::Frame::NONE.fill(Tokens::get(ui.ctx()).panel).inner_margin(egui::Margin::symmetric(12, 4)))
+        .show(ui, |ui| {
+            let t = Tokens::get(ui.ctx());
+            ui.horizontal_centered(|ui| {
+                ui.label(egui::RichText::new("Sorriso Server Mail").strong().color(t.accent));
+                ui.separator();
+                ui.label("Suporte técnico e atendimento");
+                if ui.link("WhatsApp: (66) 99685-7219").clicked() {
+                    ui.ctx().open_url(egui::OpenUrl::new_tab("https://wa.me/5566996857219"));
+                }
+                if app.services.update_check.is_some() {
+                    ui.separator();
+                    if ui.link("Verificar atualizações").clicked() {
+                        let _ = app.run("ui.checkForUpdates", json!({}));
+                    }
+                }
+            });
+        });
+}
+
 /// How tall the status bar is.
 pub const STATUS_BAR_H: f32 = 30.0;
 /// The size of the status bar's text.
