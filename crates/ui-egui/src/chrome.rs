@@ -327,25 +327,33 @@ pub fn sorriso_compact_toolbar(app: &mut MailApp, ui: &mut Ui) {
             ui.add_space(5.0);
             ui.horizontal_centered(|ui| {
                 ui.spacing_mut().item_spacing.x = 4.0;
+                // Use the same vector icons as the Outlook-style ribbon, not text glyphs.
                 let actions = [
-                    ("✉", "Novo e-mail", "mail.new"),
-                    ("▤", "Excluir", "mail.delete"),
-                    ("▣", "Arquivar", "mail.archive"),
-                    ("↶", "Responder", "mail.reply"),
-                    ("↶↶", "Responder a todos", "mail.replyAll"),
-                    ("↷", "Encaminhar", "mail.forward"),
-                    ("✉", "Não lido/Lido", "mail.toggleRead"),
-                    ("⟳", "Enviar/Receber", "ui.sync"),
+                    ("newMail", "Novo e-mail", "mail.new"),
+                    ("delete", "Excluir", "mail.delete"),
+                    ("archive", "Arquivar", "mail.archive"),
+                    ("reply", "Responder", "mail.reply"),
+                    ("replyAll", "Responder a todos", "mail.replyAll"),
+                    ("forward", "Encaminhar", "mail.forward"),
+                    ("toggleRead", "Não lido/Lido", "mail.toggleRead"),
+                    ("sync", "Enviar/Receber", "ui.sync"),
                 ];
-                for (glyph, caption, command) in actions {
-                    let text = format!("{glyph}  {caption}");
+                for (icon, caption, command) in actions {
+                    let enabled = app.enabled(command);
                     let is_new = command == "mail.new";
-                    let btn = egui::Button::new(egui::RichText::new(text).size(12.0)
+                    let btn = egui::Button::new(egui::RichText::new(format!("     {caption}")).size(12.0)
                         .color(if is_new { egui::Color32::WHITE } else { egui::Color32::from_rgb(40, 62, 91) }))
                         .fill(if is_new { egui::Color32::from_rgb(5, 94, 191) } else { surface })
                         .corner_radius(4.0)
                         .min_size(vec2(0.0, 39.0));
-                    if ui.add_enabled(app.enabled(command), btn).on_hover_text(caption).clicked() {
+                    let response = ui.add_enabled(enabled, btn).on_hover_text(caption);
+                    let color = if !enabled { egui::Color32::GRAY } else if is_new {
+                        egui::Color32::WHITE
+                    } else { egui::Color32::from_rgb(40, 62, 91) };
+                    icons::paint(ui.painter(),
+                        Rect::from_center_size(pos2(response.rect.left() + 17.0, response.rect.center().y), vec2(18.0, 18.0)),
+                        icon, color, color);
+                    if response.clicked() {
                         let _ = app.run(command, json!({}));
                     }
                 }
