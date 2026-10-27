@@ -428,11 +428,6 @@ fn search_bar(app: &mut MailApp, ui: &mut Ui, found: usize) {
 fn list(app: &mut MailApp, ui: &mut Ui) {
     let t = Tokens::get(ui.ctx());
     ui.spacing_mut().item_spacing = vec2(0.0, 0.0);
-    // Keep search directly above the messages instead of in the global title bar.
-    let width = (ui.available_width() - 16.0).max(180.0);
-    let (slot, _) = ui.allocate_exact_size(vec2(width, 36.0), Sense::hover());
-    let search = Rect::from_min_max(pos2(slot.min.x + 8.0, slot.min.y + 3.0), pos2(slot.max.x, slot.max.y - 3.0));
-    crate::chrome::search_box(app, ui, search);
     list_header(app, ui);
     let rows = app.session.rows();
     search_bar(app, ui, rows.len());
