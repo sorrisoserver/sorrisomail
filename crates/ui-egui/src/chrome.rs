@@ -227,28 +227,61 @@ pub fn title_bar(app: &mut MailApp, ui: &mut Ui) {
         });
 }
 
-/// Sorriso Server service strip. It is deliberately local/static in Alpha:
-/// remote announcements must be authenticated and versioned before enabling them.
-pub fn sorriso_service_strip(app: &mut MailApp, ui: &mut Ui) {
-    egui::Panel::top("sorriso_service_strip")
-        .exact_size(34.0)
-        .show_separator_line(true)
-        .frame(egui::Frame::NONE.fill(Tokens::get(ui.ctx()).panel).inner_margin(egui::Margin::symmetric(12, 4)))
+/// Branded header shown above the ribbon. Static links only until an authenticated
+/// Sorriso Server release feed is deployed.
+pub fn sorriso_brand_banner(app: &mut MailApp, ui: &mut Ui) {
+    egui::Panel::top("sorriso_brand_banner")
+        .exact_size(72.0)
+        .show_separator_line(false)
+        .frame(egui::Frame::NONE.fill(egui::Color32::from_rgb(5, 87, 164))
+            .inner_margin(egui::Margin::symmetric(18, 12)))
         .show(ui, |ui| {
-            let t = Tokens::get(ui.ctx());
             ui.horizontal_centered(|ui| {
-                ui.label(egui::RichText::new("Sorriso Server Mail").strong().color(t.accent));
+                ui.label(egui::RichText::new("✉  Sorriso Server Mail")
+                    .size(24.0).strong().color(egui::Color32::WHITE));
                 ui.separator();
-                ui.label("Suporte técnico e atendimento");
-                if ui.link("WhatsApp: (66) 99685-7219").clicked() {
+                ui.label(egui::RichText::new("Suporte técnico e atendimento especializado")
+                    .color(egui::Color32::WHITE));
+                if ui.button(egui::RichText::new("WhatsApp: (66) 99685-7219")
+                    .color(egui::Color32::WHITE)).clicked() {
                     ui.ctx().open_url(egui::OpenUrl::new_tab("https://wa.me/5566996857219"));
                 }
-                if app.services.update_check.is_some() {
-                    ui.separator();
-                    if ui.link("Verificar atualizações").clicked() {
-                        let _ = app.run("ui.checkForUpdates", json!({}));
+                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                    if ui.button("Novidades da versão").clicked() {
+                        let _ = app.run("ui.backstage", json!({"value": true, "page": "about"}));
                     }
-                }
+                    if ui.button("Verificar atualizações").clicked() {
+                        if app.services.update_check.is_some() {
+                            let _ = app.run("ui.checkForUpdates", json!({}));
+                        } else {
+                            app.status("Atualizações automáticas ainda não disponíveis nesta versão de testes.".to_string());
+                        }
+                    }
+                });
+            });
+        });
+}
+
+/// Narrow, centered support strip beneath the ribbon.
+pub fn sorriso_service_strip(_app: &mut MailApp, ui: &mut Ui) {
+    egui::Panel::top("sorriso_service_strip")
+        .exact_size(36.0)
+        .show_separator_line(true)
+        .frame(egui::Frame::NONE.fill(egui::Color32::from_rgb(224, 239, 251))
+            .inner_margin(egui::Margin::symmetric(12, 5)))
+        .show(ui, |ui| {
+            ui.with_layout(egui::Layout::centered_and_justified(egui::Direction::LeftToRight), |ui| {
+                ui.horizontal_centered(|ui| {
+                    ui.label(egui::RichText::new("Sorriso Server Mail").strong()
+                        .color(egui::Color32::from_rgb(5, 87, 164)));
+                    ui.separator();
+                    ui.label("Suporte técnico e atendimento");
+                    if ui.link("WhatsApp: (66) 99685-7219").clicked() {
+                        ui.ctx().open_url(egui::OpenUrl::new_tab("https://wa.me/5566996857219"));
+                    }
+                    ui.separator();
+                    ui.label("Atualizações  •  Planos e upgrades");
+                });
             });
         });
 }
