@@ -3201,8 +3201,12 @@ impl MailApp {
             // The question about checking for new versions, at the first starts: above the status bar.
             updates::question(self, ui);
             nav::module_bar(self, ui);
-            ribbon::show(self, ui);
             chrome::sorriso_service_strip(self, ui);
+            if self.session.view.module == mailcraft_engine::Module::Mail {
+                chrome::sorriso_compact_toolbar(self, ui);
+            } else {
+                ribbon::show(self, ui);
+            }
             egui::CentralPanel::default().frame(egui::Frame::NONE.fill(t.canvas)).show(ui, |ui| match self.session.view.module {
                 mailcraft_engine::Module::Mail => mail_view::show(self, ui),
                 mailcraft_engine::Module::Calendar => calendar_view::show(self, ui),
