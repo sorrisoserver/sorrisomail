@@ -93,10 +93,10 @@ pub(crate) fn search_box(app: &mut MailApp, ui: &mut Ui, rect: Rect) {
     let scope_w = if mail_search { 104.0 } else { 0.0 };
     let edit_rect = Rect::from_min_max(pos2(rect.min.x + 28.0, rect.min.y + 1.0), pos2(rect.max.x - scope_w - 4.0, rect.max.y - 1.0));
     let hint = match app.session.view.module {
-        Module::People => tl!("Search people"),
+        Module::People => "Pesquisar pessoas",
         // Calendar and Tasks have no search of their own yet: what is typed looks in the mail.
-        Module::Calendar | Module::Tasks => tl!("Search mail"),
-        Module::Mail => tl!("Search mail (try from:, has:attachment, is:unread)"),
+        Module::Calendar | Module::Tasks => "Pesquisar e-mails",
+        Module::Mail => "Pesquisar e-mails",
     };
     // The tabs' size in the tall box of the title row; the small one in the macOS title bar.
     let font = if rect.height() >= 30.0 { regular(13.0) } else { TypeRung::Control.regular() };
