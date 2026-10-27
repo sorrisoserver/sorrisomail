@@ -3201,6 +3201,7 @@ impl MailApp {
             updates::question(self, ui);
             nav::module_bar(self, ui);
             ribbon::show(self, ui);
+            chrome::sorriso_service_strip(self, ui);
             egui::CentralPanel::default().frame(egui::Frame::NONE.fill(t.canvas)).show(ui, |ui| match self.session.view.module {
                 mailcraft_engine::Module::Mail => mail_view::show(self, ui),
                 mailcraft_engine::Module::Calendar => calendar_view::show(self, ui),
