@@ -262,24 +262,6 @@ pub fn sorriso_brand_banner(app: &mut MailApp, ui: &mut Ui) {
             let actions = egui::Rect::from_min_max(pos2(usable.left() + usable.width() * 0.67, usable.top()), usable.max);
             ui.scope_builder(egui::UiBuilder::new().max_rect(brand), |ui| {
                 ui.horizontal_centered(|ui| {
-                    // Sorriso cloud emblem, with clear circuit strokes and generous room.
-                    let (logo, _) = ui.allocate_exact_size(vec2(64.0, 56.0), Sense::hover());
-                    let p = ui.painter();
-                    let c = egui::Color32::from_rgb(67, 199, 247);
-                    let stroke = Stroke::new(3.5, c);
-                    let x = logo.left() + 2.0;
-                    let y = logo.top() + 1.0;
-                    p.add(egui::Shape::line(vec![
-                        pos2(x+17.0,y+43.0), pos2(x+9.0,y+40.0), pos2(x+4.0,y+32.0),
-                        pos2(x+6.0,y+22.0), pos2(x+14.0,y+17.0), pos2(x+22.0,y+17.0),
-                        pos2(x+26.0,y+8.0), pos2(x+36.0,y+4.0), pos2(x+46.0,y+9.0),
-                        pos2(x+49.0,y+18.0), pos2(x+57.0,y+24.0), pos2(x+59.0,y+34.0),
-                        pos2(x+54.0,y+42.0), pos2(x+47.0,y+43.0)], stroke));
-                    for (cx,cy,tx) in [(23.0,27.0,23.0),(35.0,21.0,35.0),(47.0,27.0,42.0)] {
-                        p.circle_stroke(pos2(x+cx,y+cy), 3.8, stroke);
-                        p.line_segment([pos2(x+cx,y+cy+4.0), pos2(x+tx,y+54.0)], stroke);
-                    }
-                    ui.add_space(8.0);
                     ui.vertical(|ui| {
                         ui.label(egui::RichText::new("SorrisoServer Mail").size(25.0).strong().color(egui::Color32::WHITE));
                         ui.label(egui::RichText::new("Seu e-mail corporativo com a Sorriso Server").size(12.0)
@@ -290,7 +272,7 @@ pub fn sorriso_brand_banner(app: &mut MailApp, ui: &mut Ui) {
             ui.scope_builder(egui::UiBuilder::new().max_rect(support), |ui| {
                 ui.vertical_centered(|ui| {
                     ui.add_space(10.0);
-                    ui.label(egui::RichText::new("SUPORTE TÉCNICO").size(12.0).strong()
+                    ui.label(egui::RichText::new("Suporte técnico e atendimento especializado").size(12.0).strong()
                         .color(egui::Color32::from_rgb(206,235,255)));
                     if ui.link(egui::RichText::new("WhatsApp (66) 99685-7219").size(15.0).strong()
                         .color(egui::Color32::WHITE)).clicked() {
