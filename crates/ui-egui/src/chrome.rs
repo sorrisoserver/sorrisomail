@@ -230,7 +230,7 @@ pub fn title_bar(app: &mut MailApp, ui: &mut Ui) {
 /// Branded header shown above the ribbon. Static links only until an authenticated
 /// Sorriso Server release feed is deployed.
 pub fn sorriso_brand_banner(app: &mut MailApp, ui: &mut Ui) {
-    let navy = egui::Color32::from_rgb(5, 87, 164);
+    let navy = egui::Color32::from_rgb(4, 88, 168);
     egui::Panel::top("sorriso_brand_banner")
         .exact_size(78.0)
         .show_separator_line(false)
@@ -244,10 +244,27 @@ pub fn sorriso_brand_banner(app: &mut MailApp, ui: &mut Ui) {
                     egui::vec2((width * 0.32).max(220.0), 54.0),
                     egui::Layout::left_to_right(egui::Align::Center),
                     |ui| {
-                        ui.add(egui::Image::from_bytes(
-                            "bytes://sorriso-mail-brand-icon.png",
-                            include_bytes!("../../../assets/app-icon/hicolor/128x128/apps/io.github.billsecond.mailcraft.png"),
-                        ).fit_to_exact_size(egui::vec2(42.0, 42.0)));
+                        // Sorriso Server cloud/circuit emblem, drawn as vectors so it
+                        // stays sharp and does not depend on the old MailCraft icon.
+                        let (logo, _) = ui.allocate_exact_size(egui::vec2(54.0, 48.0), Sense::hover());
+                        let c = egui::Color32::from_rgb(45, 183, 235);
+                        let stroke = Stroke::new(3.0, c);
+                        let x = logo.min.x;
+                        let y = logo.min.y;
+                        let outline = [
+                            pos2(x + 14.0, y + 34.0), pos2(x + 7.0, y + 31.0),
+                            pos2(x + 5.0, y + 23.0), pos2(x + 8.0, y + 15.0),
+                            pos2(x + 16.0, y + 12.0), pos2(x + 20.0, y + 12.0),
+                            pos2(x + 25.0, y + 4.0), pos2(x + 33.0, y + 3.0),
+                            pos2(x + 40.0, y + 8.0), pos2(x + 42.0, y + 15.0),
+                            pos2(x + 49.0, y + 19.0), pos2(x + 50.0, y + 27.0),
+                            pos2(x + 46.0, y + 34.0), pos2(x + 39.0, y + 34.0),
+                        ];
+                        ui.painter().add(egui::Shape::line(outline.to_vec(), stroke));
+                        for (cx, cy, endx) in [(22.0, 21.0, 22.0), (31.0, 16.0, 31.0), (40.0, 21.0, 36.0)] {
+                            ui.painter().circle_stroke(pos2(x + cx, y + cy), 3.0, stroke);
+                            ui.painter().line_segment([pos2(x + cx, y + cy + 3.0), pos2(x + endx, y + 44.0)], stroke);
+                        }
                         ui.vertical(|ui| {
                             ui.label(egui::RichText::new("Sorriso Server Mail").size(22.0).strong().color(egui::Color32::WHITE));
                             ui.label(egui::RichText::new("Seu e-mail corporativo com a Sorriso Server").size(11.0).color(egui::Color32::WHITE));
