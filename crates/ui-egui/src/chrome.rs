@@ -230,22 +230,44 @@ pub fn title_bar(app: &mut MailApp, ui: &mut Ui) {
 /// Branded header shown above the ribbon. Static links only until an authenticated
 /// Sorriso Server release feed is deployed.
 pub fn sorriso_brand_banner(app: &mut MailApp, ui: &mut Ui) {
+    let navy = egui::Color32::from_rgb(5, 87, 164);
     egui::Panel::top("sorriso_brand_banner")
-        .exact_size(72.0)
+        .exact_size(78.0)
         .show_separator_line(false)
-        .frame(egui::Frame::NONE.fill(egui::Color32::from_rgb(5, 87, 164))
-            .inner_margin(egui::Margin::symmetric(18, 12)))
+        .frame(egui::Frame::NONE.fill(navy).inner_margin(egui::Margin::symmetric(18, 10)))
         .show(ui, |ui| {
+            let width = ui.available_width();
             ui.horizontal_centered(|ui| {
-                ui.label(egui::RichText::new("✉  Sorriso Server Mail")
-                    .size(24.0).strong().color(egui::Color32::WHITE));
-                ui.separator();
-                ui.label(egui::RichText::new("Suporte técnico e atendimento especializado")
-                    .color(egui::Color32::WHITE));
-                if ui.button(egui::RichText::new("WhatsApp: (66) 99685-7219")
-                    .color(egui::Color32::WHITE)).clicked() {
-                    ui.ctx().open_url(egui::OpenUrl::new_tab("https://wa.me/5566996857219"));
-                }
+                ui.spacing_mut().item_spacing.x = 8.0;
+                // Brand at the left: reuse the actual app icon bundled in the Windows build.
+                ui.allocate_ui_with_layout(
+                    egui::vec2((width * 0.32).max(220.0), 54.0),
+                    egui::Layout::left_to_right(egui::Align::Center),
+                    |ui| {
+                        ui.add(egui::Image::from_bytes(
+                            "bytes://sorriso-mail-brand-icon.png",
+                            include_bytes!("../../../assets/app-icon/hicolor/128x128/apps/io.github.billsecond.mailcraft.png"),
+                        ).fit_to_exact_size(egui::vec2(42.0, 42.0)));
+                        ui.vertical(|ui| {
+                            ui.label(egui::RichText::new("Sorriso Server Mail").size(22.0).strong().color(egui::Color32::WHITE));
+                            ui.label(egui::RichText::new("Seu e-mail corporativo com a Sorriso Server").size(11.0).color(egui::Color32::WHITE));
+                        });
+                    },
+                );
+                // Support stays in the middle, independent of the action buttons.
+                ui.allocate_ui_with_layout(
+                    egui::vec2((width * 0.34).max(220.0), 54.0),
+                    egui::Layout::left_to_right(egui::Align::Center),
+                    |ui| {
+                        ui.vertical(|ui| {
+                            ui.label(egui::RichText::new("Suporte técnico").size(13.0).color(egui::Color32::WHITE));
+                            if ui.link(egui::RichText::new("WhatsApp (66) 99685-7219").strong().color(egui::Color32::WHITE)).clicked() {
+                                ui.ctx().open_url(egui::OpenUrl::new_tab("https://wa.me/5566996857219"));
+                            }
+                        });
+                    },
+                );
+                // Update buttons anchored to the right, as in the approved mockup.
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                     if ui.button("Novidades da versão").clicked() {
                         let _ = app.run("ui.backstage", json!({"value": true, "page": "about"}));
