@@ -230,66 +230,88 @@ pub fn title_bar(app: &mut MailApp, ui: &mut Ui) {
 /// Branded header shown above the ribbon. Static links only until an authenticated
 /// Sorriso Server release feed is deployed.
 pub fn sorriso_brand_banner(app: &mut MailApp, ui: &mut Ui) {
-    let navy = egui::Color32::from_rgb(4, 88, 168);
+    let left = egui::Color32::from_rgb(4, 45, 89);
+    let right = egui::Color32::from_rgb(6, 112, 197);
     egui::Panel::top("sorriso_brand_banner")
-        .exact_size(78.0)
+        .exact_size(92.0)
         .show_separator_line(false)
-        .frame(egui::Frame::NONE.fill(navy).inner_margin(egui::Margin::symmetric(18, 10)))
+        .frame(egui::Frame::NONE.fill(left))
         .show(ui, |ui| {
-            let width = ui.available_width();
-            ui.horizontal_centered(|ui| {
-                ui.spacing_mut().item_spacing.x = 8.0;
-                // Brand at the left: reuse the actual app icon bundled in the Windows build.
-                ui.allocate_ui_with_layout(
-                    egui::vec2((width * 0.32).max(220.0), 54.0),
-                    egui::Layout::left_to_right(egui::Align::Center),
-                    |ui| {
-                        // Sorriso Server cloud/circuit emblem, drawn as vectors so it
-                        // stays sharp and does not depend on the old MailCraft icon.
-                        let (logo, _) = ui.allocate_exact_size(egui::vec2(54.0, 48.0), Sense::hover());
-                        let c = egui::Color32::from_rgb(45, 183, 235);
-                        let stroke = Stroke::new(3.0, c);
-                        let x = logo.min.x;
-                        let y = logo.min.y;
-                        let outline = [
-                            pos2(x + 14.0, y + 34.0), pos2(x + 7.0, y + 31.0),
-                            pos2(x + 5.0, y + 23.0), pos2(x + 8.0, y + 15.0),
-                            pos2(x + 16.0, y + 12.0), pos2(x + 20.0, y + 12.0),
-                            pos2(x + 25.0, y + 4.0), pos2(x + 33.0, y + 3.0),
-                            pos2(x + 40.0, y + 8.0), pos2(x + 42.0, y + 15.0),
-                            pos2(x + 49.0, y + 19.0), pos2(x + 50.0, y + 27.0),
-                            pos2(x + 46.0, y + 34.0), pos2(x + 39.0, y + 34.0),
-                        ];
-                        ui.painter().add(egui::Shape::line(outline.to_vec(), stroke));
-                        for (cx, cy, endx) in [(22.0, 21.0, 22.0), (31.0, 16.0, 31.0), (40.0, 21.0, 36.0)] {
-                            ui.painter().circle_stroke(pos2(x + cx, y + cy), 3.0, stroke);
-                            ui.painter().line_segment([pos2(x + cx, y + cy + 3.0), pos2(x + endx, y + 44.0)], stroke);
-                        }
-                        ui.vertical(|ui| {
-                            ui.label(egui::RichText::new("Sorriso Server Mail").size(22.0).strong().color(egui::Color32::WHITE));
-                            ui.label(egui::RichText::new("Seu e-mail corporativo com a Sorriso Server").size(11.0).color(egui::Color32::WHITE));
-                        });
-                    },
-                );
-                // Support stays in the middle, independent of the action buttons.
-                ui.allocate_ui_with_layout(
-                    egui::vec2((width * 0.34).max(220.0), 54.0),
-                    egui::Layout::left_to_right(egui::Align::Center),
-                    |ui| {
-                        ui.vertical(|ui| {
-                            ui.label(egui::RichText::new("Suporte técnico").size(13.0).color(egui::Color32::WHITE));
-                            if ui.link(egui::RichText::new("WhatsApp (66) 99685-7219").strong().color(egui::Color32::WHITE)).clicked() {
-                                ui.ctx().open_url(egui::OpenUrl::new_tab("https://wa.me/5566996857219"));
-                            }
-                        });
-                    },
-                );
-                // Update buttons anchored to the right, as in the approved mockup.
+            let area = ui.max_rect();
+            // Layered gradient, rather than the solid rectangle of earlier alphas.
+            let bands = 80;
+            for i in 0..bands {
+                let ratio = i as f32 / bands as f32;
+                let x0 = area.left() + area.width() * ratio;
+                let x1 = area.left() + area.width() * (i + 1) as f32 / bands as f32 + 1.0;
+                let mix = |a: u8, b: u8| ((a as f32 * (1.0 - ratio) + b as f32 * ratio) as u8);
+                let color = egui::Color32::from_rgb(mix(left.r(), right.r()), mix(left.g(), right.g()), mix(left.b(), right.b()));
+                ui.painter().rect_filled(egui::Rect::from_min_max(pos2(x0, area.top()), pos2(x1, area.bottom())), 0.0, color);
+            }
+            // Subtle graphics, clipped to the header, matching Sorriso branding.
+            let graphics = ui.painter().with_clip_rect(area);
+            graphics.circle_stroke(pos2(area.right() - 110.0, area.center().y - 35.0), 114.0,
+                Stroke::new(24.0, egui::Color32::from_rgba_unmultiplied(62, 178, 230, 35)));
+            graphics.circle_stroke(pos2(area.left() + 190.0, area.top() - 100.0), 155.0,
+                Stroke::new(28.0, egui::Color32::from_rgba_unmultiplied(78, 185, 234, 25)));
+            // Absolute regions ensure that center support never hugs the brand or buttons.
+            let usable = area.shrink2(vec2(18.0, 10.0));
+            let brand = egui::Rect::from_min_max(usable.min, pos2(usable.left() + usable.width() * 0.38, usable.bottom()));
+            let support = egui::Rect::from_min_max(pos2(usable.left() + usable.width() * 0.39, usable.top()),
+                pos2(usable.left() + usable.width() * 0.66, usable.bottom()));
+            let actions = egui::Rect::from_min_max(pos2(usable.left() + usable.width() * 0.67, usable.top()), usable.max);
+            ui.scope_builder(egui::UiBuilder::new().max_rect(brand), |ui| {
+                ui.horizontal_centered(|ui| {
+                    // Sorriso cloud emblem, with clear circuit strokes and generous room.
+                    let (logo, _) = ui.allocate_exact_size(vec2(64.0, 56.0), Sense::hover());
+                    let p = ui.painter();
+                    let c = egui::Color32::from_rgb(67, 199, 247);
+                    let stroke = Stroke::new(3.5, c);
+                    let x = logo.left() + 2.0;
+                    let y = logo.top() + 1.0;
+                    p.add(egui::Shape::line(vec![
+                        pos2(x+17.0,y+43.0), pos2(x+9.0,y+40.0), pos2(x+4.0,y+32.0),
+                        pos2(x+6.0,y+22.0), pos2(x+14.0,y+17.0), pos2(x+22.0,y+17.0),
+                        pos2(x+26.0,y+8.0), pos2(x+36.0,y+4.0), pos2(x+46.0,y+9.0),
+                        pos2(x+49.0,y+18.0), pos2(x+57.0,y+24.0), pos2(x+59.0,y+34.0),
+                        pos2(x+54.0,y+42.0), pos2(x+47.0,y+43.0)], stroke));
+                    for (cx,cy,tx) in [(23.0,27.0,23.0),(35.0,21.0,35.0),(47.0,27.0,42.0)] {
+                        p.circle_stroke(pos2(x+cx,y+cy), 3.8, stroke);
+                        p.line_segment([pos2(x+cx,y+cy+4.0), pos2(x+tx,y+54.0)], stroke);
+                    }
+                    ui.add_space(8.0);
+                    ui.vertical(|ui| {
+                        ui.label(egui::RichText::new("Sorriso Server Mail").size(25.0).strong().color(egui::Color32::WHITE));
+                        ui.label(egui::RichText::new("Seu e-mail corporativo com a Sorriso Server").size(12.0)
+                            .color(egui::Color32::from_rgb(217,239,255)));
+                    });
+                });
+            });
+            ui.scope_builder(egui::UiBuilder::new().max_rect(support), |ui| {
+                ui.vertical_centered(|ui| {
+                    ui.add_space(10.0);
+                    ui.label(egui::RichText::new("SUPORTE TÉCNICO").size(12.0).strong()
+                        .color(egui::Color32::from_rgb(206,235,255)));
+                    if ui.link(egui::RichText::new("WhatsApp (66) 99685-7219").size(15.0).strong()
+                        .color(egui::Color32::WHITE)).clicked() {
+                        ui.ctx().open_url(egui::OpenUrl::new_tab("https://wa.me/5566996857219"));
+                    }
+                });
+            });
+            ui.scope_builder(egui::UiBuilder::new().max_rect(actions), |ui| {
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    if ui.button("Novidades da versão").clicked() {
+                    let secondary = egui::Button::new(egui::RichText::new("Novidades da versão").size(13.0).strong()
+                        .color(egui::Color32::WHITE))
+                        .fill(egui::Color32::from_rgb(7, 72, 137))
+                        .stroke(Stroke::new(1.0, egui::Color32::from_rgb(166,221,252)))
+                        .corner_radius(7.0).min_size(vec2(145.0, 38.0));
+                    if ui.add(secondary).clicked() {
                         let _ = app.run("ui.backstage", json!({"value": true, "page": "about"}));
                     }
-                    if ui.button("Verificar atualizações").clicked() {
+                    let primary = egui::Button::new(egui::RichText::new("Verificar atualizações").size(13.0).strong()
+                        .color(egui::Color32::from_rgb(5, 86, 169)))
+                        .fill(egui::Color32::WHITE).corner_radius(7.0).min_size(vec2(170.0, 38.0));
+                    if ui.add(primary).clicked() {
                         if app.services.update_check.is_some() {
                             let _ = app.run("ui.checkForUpdates", json!({}));
                         } else {
