@@ -3202,10 +3202,11 @@ impl MailApp {
             updates::question(self, ui);
             nav::module_bar(self, ui);
             chrome::sorriso_service_strip(self, ui);
+            // Always show Outlook-style tabs and ribbon, including in Mail.
+            // The mail module additionally shows its focused action/search toolbar.
+            ribbon::show(self, ui);
             if self.session.view.module == mailcraft_engine::Module::Mail {
                 chrome::sorriso_compact_toolbar(self, ui);
-            } else {
-                ribbon::show(self, ui);
             }
             egui::CentralPanel::default().frame(egui::Frame::NONE.fill(t.canvas)).show(ui, |ui| match self.session.view.module {
                 mailcraft_engine::Module::Mail => mail_view::show(self, ui),
