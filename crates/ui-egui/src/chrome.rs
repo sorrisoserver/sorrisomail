@@ -323,6 +323,53 @@ pub fn sorriso_brand_banner(app: &mut MailApp, ui: &mut Ui) {
         });
 }
 
+/// Compact command bar for the SorrisoServer Mail inbox.
+/// Keeps the existing engine actions; there is no separate fake UI state.
+pub fn sorriso_compact_toolbar(app: &mut MailApp, ui: &mut Ui) {
+    egui::Panel::top("sorriso_compact_toolbar")
+        .exact_size(62.0)
+        .show_separator_line(true)
+        .frame(egui::Frame::NONE.fill(egui::Color32::from_rgb(249, 251, 254))
+            .inner_margin(egui::Margin::symmetric(15, 9)))
+        .show(ui, |ui| {
+            ui.horizontal_centered(|ui| {
+                let primary = egui::Button::new(egui::RichText::new("✎  Novo e-mail").size(15.0).strong()
+                    .color(egui::Color32::WHITE))
+                    .fill(egui::Color32::from_rgb(3, 91, 195))
+                    .corner_radius(7.0).min_size(vec2(150.0, 42.0));
+                if ui.add_enabled(app.enabled("mail.new"), primary).clicked() {
+                    let _ = app.run("mail.new", json!({}));
+                }
+                ui.add_space(7.0);
+                for (symbol, title, command) in [
+                    ("✕", "Excluir", "mail.delete"),
+                    ("▣", "Arquivar", "mail.archive"),
+                    ("↶", "Responder", "mail.reply"),
+                    ("↶↶", "Responder a todos", "mail.replyAll"),
+                    ("↷", "Encaminhar", "mail.forward"),
+                    ("◈", "Lida / não lida", "mail.toggleRead"),
+                    ("⟳", "Sincronizar", "ui.sync"),
+                ] {
+                    let btn = egui::Button::new(egui::RichText::new(symbol).size(21.0)
+                        .color(egui::Color32::from_rgb(45, 83, 128)))
+                        .fill(egui::Color32::from_rgb(239, 244, 250))
+                        .corner_radius(6.0).min_size(vec2(41.0, 41.0));
+                    if ui.add_enabled(app.enabled(command), btn).on_hover_text(title).clicked() {
+                        let _ = app.run(command, json!({}));
+                    }
+                }
+                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                    ui.add_space(4.0);
+                    let available = ui.available_width();
+                    if available >= 185.0 {
+                        let (rect, _) = ui.allocate_exact_size(vec2(available.min(360.0), 40.0), Sense::hover());
+                        search_box(app, ui, rect);
+                    }
+                });
+            });
+        });
+}
+
 /// Narrow, centered support strip beneath the ribbon.
 pub fn sorriso_service_strip(_app: &mut MailApp, ui: &mut Ui) {
     egui::Panel::top("sorriso_service_strip")
