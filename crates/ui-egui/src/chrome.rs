@@ -264,7 +264,7 @@ pub fn sorriso_brand_banner(app: &mut MailApp, ui: &mut Ui) {
                 ui.horizontal_centered(|ui| {
                     ui.vertical(|ui| {
                         ui.label(egui::RichText::new("SorrisoServer Mail").size(25.0).strong().color(egui::Color32::WHITE));
-                        ui.label(egui::RichText::new("Seu e-mail corporativo com a Sorriso Server").size(12.0)
+                        ui.label(egui::RichText::new("Sua Marca em cada Mensagem.").size(12.0)
                             .color(egui::Color32::from_rgb(217,239,255)));
                     });
                 });
