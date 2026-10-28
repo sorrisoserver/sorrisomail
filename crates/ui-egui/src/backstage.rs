@@ -664,38 +664,19 @@ pub(crate) fn contributors(ui: &mut Ui) {
     });
 }
 
-fn about(app: &mut MailApp, ui: &mut Ui, t: &Tokens) {
-    heading(ui, tl!("About MailCraft"), t);
-    ui.label(
-        egui::RichText::new(crate::i18n::fmt(tl!("Version {version}"), &[("version", concat!(env!("CARGO_PKG_VERSION"), " — Sorriso Alpha"))]))
-            .color(t.text_dim),
-    );
-    ui.label(tl!(
-        "Mail, calendar, people and tasks, written from scratch in Rust. It runs natively on macOS, Windows, Linux and BSD, and in the browser."
-    ));
-    ui.label(tl!("Open source under the MIT License or the Apache License 2.0, at your option."));
-    if app.services.update_check.is_some() {
-        section(ui, tl!("Updates"), t);
-        crate::updates::about(app, ui, t);
+fn about(_app: &mut MailApp, ui: &mut Ui, t: &Tokens) {
+    heading(ui, "Sobre o Sorriso Server Mail", t);
+    ui.label(egui::RichText::new(concat!("Versão ", env!("CARGO_PKG_VERSION"), " — Sorriso Alpha")).color(t.text_dim));
+    ui.add_space(8.0);
+    section(ui, "Sorriso Server Mail", t);
+    ui.label("Aplicativo de e-mail, calendário, contatos e tarefas para uso profissional.");
+    section(ui, "Suporte técnico", t);
+    ui.label("Atendimento Sorriso Server");
+    if ui.link("WhatsApp: (66) 99685-7219").clicked() {
+        ui.ctx().open_url(egui::OpenUrl::new_tab("https://wa.me/5566996857219"));
     }
-    section(ui, tl!("Contributors"), t);
-    contributors(ui);
-    if ui.button(tl!("Show Contributors")).clicked() {
-        app.ui.backstage = false;
-        let _ = app.run("ui.dialog", json!({"name": "contributors"}));
-    }
-    section(ui, tl!("What it is made of"), t);
-    ui.label(tl!("The interface fonts are Inter, Source Sans 3 and JetBrains Mono (SIL Open Font License 1.1). Every icon is drawn in code and is original work. No artwork, fonts or text from other mail programs are included."));
-    section(ui, tl!("Your mail stays yours"), t);
-    ui.label(tl!("Messages are shown without running anything in them, and the pictures a message keeps on the web are downloaded only when you ask. Passwords are kept in memory only while the app is open."));
-    section(ui, tl!("Scripts and agents"), t);
-    let parity = mailcraft_engine::catalog::parity(&app.session.registry);
-    ui.label(crate::i18n::fmt(
-        tl!("Everything the interface does is a command: {commands} of them, covering {percent}% of the feature catalog. The command line, the control channel and the MCP server run the same commands."),
-        &[("commands", &parity["commands"].to_string()), ("percent", &parity["percent"].to_string())],
-    ));
-    if ui.button(tl!("Search Commands")).clicked() {
-        app.ui.backstage = false;
-        let _ = app.run("ui.dialog", json!({"name": "commands"}));
-    }
+    section(ui, "Privacidade e segurança", t);
+    ui.label("Mensagens são apresentadas sem executar conteúdo remoto. Imagens externas exigem autorização.");
+    section(ui, "Software livre e licenças", t);
+    ui.label("Baseado em MailCraft e componentes de código aberto, distribuídos conforme as licenças MIT ou Apache 2.0. Consulte os arquivos de licença, avisos e atribuições fornecidos com a distribuição.");
 }
