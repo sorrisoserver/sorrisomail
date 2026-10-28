@@ -233,7 +233,7 @@ pub fn sorriso_brand_banner(app: &mut MailApp, ui: &mut Ui) {
     let left = egui::Color32::from_rgb(4, 45, 89);
     let right = egui::Color32::from_rgb(6, 112, 197);
     egui::Panel::top("sorriso_brand_banner")
-        .exact_size(92.0)
+        .exact_size(55.0)
         .show_separator_line(false)
         .frame(egui::Frame::NONE.fill(left))
         .show(ui, |ui| {
@@ -255,23 +255,22 @@ pub fn sorriso_brand_banner(app: &mut MailApp, ui: &mut Ui) {
             graphics.circle_stroke(pos2(area.left() + 190.0, area.top() - 100.0), 155.0,
                 Stroke::new(28.0, egui::Color32::from_rgba_unmultiplied(78, 185, 234, 25)));
             // Absolute regions ensure that center support never hugs the brand or buttons.
-            let usable = area.shrink2(vec2(18.0, 10.0));
+            let usable = area.shrink2(vec2(18.0, 3.0));
             let brand = egui::Rect::from_min_max(usable.min, pos2(usable.left() + usable.width() * 0.38, usable.bottom()));
             let support = egui::Rect::from_min_max(pos2(usable.left() + usable.width() * 0.39, usable.top()),
                 pos2(usable.left() + usable.width() * 0.66, usable.bottom()));
             let actions = egui::Rect::from_min_max(pos2(usable.left() + usable.width() * 0.67, usable.top()), usable.max);
             ui.scope_builder(egui::UiBuilder::new().max_rect(brand), |ui| {
-                ui.horizontal_centered(|ui| {
-                    ui.vertical(|ui| {
-                        ui.label(egui::RichText::new("SorrisoServer Mail").size(25.0).strong().color(egui::Color32::WHITE));
+                ui.vertical_centered(|ui| {
+                    ui.add_space(3.0);
+                    ui.label(egui::RichText::new("SorrisoServer Mail").size(25.0).strong().color(egui::Color32::WHITE));
                         ui.label(egui::RichText::new("Sua Marca em cada Mensagem.").size(12.0)
                             .color(egui::Color32::from_rgb(217,239,255)));
-                    });
                 });
             });
             ui.scope_builder(egui::UiBuilder::new().max_rect(support), |ui| {
                 ui.vertical_centered(|ui| {
-                    ui.add_space(10.0);
+                    ui.add_space(0.0);
                     ui.label(egui::RichText::new("Suporte técnico e atendimento especializado").size(12.0).strong()
                         .color(egui::Color32::from_rgb(206,235,255)));
                     if ui.link(egui::RichText::new("WhatsApp (66) 99685-7219").size(15.0).strong()
