@@ -271,11 +271,11 @@ fn info(app: &mut MailApp, ui: &mut Ui, t: &Tokens) {
         let n = |k: &str| v.get(k).and_then(serde_json::Value::as_u64).unwrap_or(0);
         let line = format!(
             "{} · {} · {} · {} · {}",
-            tln!(n("messages"), "{n} message", "{n} messages"),
-            tln!(n("unread"), "{n} unread", "{n} unread"),
-            tln!(n("contacts"), "{n} contact", "{n} contacts"),
-            tln!(n("events"), "{n} event", "{n} events"),
-            tln!(n("tasks"), "{n} task", "{n} tasks"),
+            format!("{} itens", n("messages")),
+            format!("{} não lidas", n("unread")),
+            format!("{} contatos", n("contacts")),
+            format!("{} eventos", n("events")),
+            format!("{} tarefas", n("tasks")),
         );
         ui.label(egui::RichText::new(line).color(t.text));
         let place = match (&app.session.path, app.services.persist.is_some()) {
