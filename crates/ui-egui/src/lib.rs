@@ -2764,8 +2764,10 @@ impl MailApp {
         }
         // Settled from the main window's input, so every window has the same theme.
         let preference = self.ui.theme.preference(ctx.system_theme());
-        if self.applied_theme != Some(preference) {
-            theme::apply(ctx, preference);
+        let brand = self.ui.theme == theme::Appearance::Brand;
+        let was_brand = ctx.data(|d| d.get_temp::<bool>(egui::Id::new("sorriso_brand_theme")).unwrap_or(false));
+        if self.applied_theme != Some(preference) || brand != was_brand {
+            theme::apply_with_brand(ctx, preference, brand);
             self.applied_theme = Some(preference);
         }
         let zoom = self.ui.interface_size.zoom_factor();
