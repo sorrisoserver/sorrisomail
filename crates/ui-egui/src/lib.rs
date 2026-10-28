@@ -2764,7 +2764,9 @@ impl MailApp {
         }
         // Settled from the main window's input, so every window has the same theme.
         let preference = self.ui.theme.preference(ctx.system_theme());
-        let brand = self.ui.theme == theme::Appearance::Brand;
+        // The existing saved "system" preference also selects our institutional palette.
+        // This ensures upgrades from older installations show the new blue appearance.
+        let brand = matches!(self.ui.theme, theme::Appearance::Brand | theme::Appearance::System);
         let was_brand = ctx.data(|d| d.get_temp::<bool>(egui::Id::new("sorriso_brand_theme")).unwrap_or(false));
         if self.applied_theme != Some(preference) || brand != was_brand {
             theme::apply_with_brand(ctx, preference, brand);
