@@ -1272,6 +1272,7 @@ impl MailApp {
             None if id == "ui.cancelSignIn" => self.signing_in.is_some() || self.approving(),
             None if id == "ui.cancelSync" => self.sync_rx.is_some(),
             None if id == "ui.moreResultsOnServer" => {
+                if self.ui.offline { return false; }
                 matches!(self.server_link(), server_search::Link::Ask | server_search::Link::NotConnected { retry: true })
             }
             None if id == "ui.copySelection" => self.text_selection.any(),
@@ -1295,7 +1296,7 @@ impl MailApp {
             self.dialog = dialogs::open_dialog(self, name, &params);
             return Ok(json!({"pending": name}));
         }
-        if self.ui.offline && (id == "ui.checkForUpdates" || id == "ui.sync" || id == "sync.request") {
+        if self.ui.offline && (id == "ui.checkForUpdates" || id == "ui.sync" || id == "sync.request" || id == "ui.checkCalendar" || id == "ui.moreResultsOnServer" || id == "ui.joinMeeting" || id == "ui.connectFavorites" || id == "ui.connectMicrosoft" || id == "ui.retryApproval") {
             let message = "Modo offline: operações de rede suspensas.".to_string();
             self.status(message.clone());
             return Err(message);
