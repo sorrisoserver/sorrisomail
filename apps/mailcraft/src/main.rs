@@ -1128,7 +1128,12 @@ fn services(
         microsoft_client_id: microsoft_client_id(),
         // Whether a new version is out: GitHub is asked about this build's repository and told
         // nothing else, once a day when the owner wants that, or when they press Check for Updates.
-        update_check: None, // Sorriso Server Mail: do not check the upstream MailCraft release feed.
+        update_check: Some(Box::new(move |pre_releases| {
+            background(&update_ctx, "Sorriso Server update check", move || {
+                mailcraft_net::update::latest_at("https://api.github.com", "https://github.com/sorrisoserver/sorrisomail", pre_releases)
+                    .map_err(|e| e.to_string())
+            })
+        })),
         // A build that isn't one of the project's packages (they name their commit) never asks.
         development_build: build_sha() == "dev",
         // A copy that updates itself downloads a newer release, checked by its signature.
