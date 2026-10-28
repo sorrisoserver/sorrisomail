@@ -433,6 +433,19 @@ pub(crate) fn sync_shown(app: &MailApp) -> SyncShown {
     if sync.is_empty() { SyncShown::Nothing } else { SyncShown::Text(sync.clone()) }
 }
 
+fn status_pt(message: &str) -> String {
+    if message.starts_with("Up to date") {
+        return message.replacen("Up to date", "Atualizado", 1);
+    }
+    if message.contains("Couldn't check for new mail") && message.contains("name couldn't be looked up") {
+        return "Não foi possível verificar novos e-mails: servidor não encontrado (DNS).".into();
+    }
+    if message.contains("Couldn't check for new mail") {
+        return message.replace("Couldn't check for new mail", "Não foi possível verificar novos e-mails");
+    }
+    message.to_string()
+}
+
 /// Persistent offline warning, independent of temporary status messages.
 pub fn offline_notice(app: &MailApp, ui: &mut Ui) {
     if !app.ui.offline { return; }
@@ -563,7 +576,7 @@ pub fn status_bar(app: &mut MailApp, ui: &mut Ui) {
                         // What Send/Receive is doing, or did: a click shows it account by account.
                         let shown = match &shown_sync {
                             SyncShown::Bar { label, fraction } => sync_bar(app, ui, &t, label, *fraction),
-                            SyncShown::Text(said) => st(ui, said, t.text_dim),
+                            SyncShown::Text(said) => st(ui, &status_pt(said), t.text_dim),
                             SyncShown::Nothing => ui.allocate_exact_size(vec2(0.0, 0.0), Sense::hover()).1,
                         };
                         let shown = shown.interact(Sense::click()).on_hover_cursor(egui::CursorIcon::PointingHand);
@@ -574,9 +587,9 @@ pub fn status_bar(app: &mut MailApp, ui: &mut Ui) {
                         // Under the pointer, the run's own words say where it is.
                         let tip = match &shown_sync {
                             SyncShown::Bar { .. } if !app.session.sync_status.is_empty() => {
-                                format!("{}\n{}", app.session.sync_status, tl!("Show Send/Receive Progress"))
+                                format!("{}\n{}", status_pt(&app.session.sync_status), "Mostrar progresso de envio e recebimento")
                             }
-                            _ => tl!("Show Send/Receive Progress").to_string(),
+                            _ => "Mostrar progresso de envio e recebimento".to_string(),
                         };
                         if shown.on_hover_text(tip).clicked() {
                             if app.sync_panel.is_some() {
