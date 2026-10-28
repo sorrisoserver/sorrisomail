@@ -255,13 +255,13 @@ pub fn sorriso_brand_banner(app: &mut MailApp, ui: &mut Ui) {
             graphics.circle_stroke(pos2(area.left() + 190.0, area.top() - 100.0), 155.0,
                 Stroke::new(28.0, egui::Color32::from_rgba_unmultiplied(78, 185, 234, 25)));
             // Absolute regions ensure that center support never hugs the brand or buttons.
-            let usable = area.shrink2(vec2(18.0, 3.0));
+            let usable = egui::Rect::from_min_max(pos2(area.left() + 7.0, area.top() + 3.0), pos2(area.right() - 18.0, area.bottom() - 3.0));
             let brand = egui::Rect::from_min_max(usable.min, pos2(usable.left() + usable.width() * 0.38, usable.bottom()));
             let support = egui::Rect::from_min_max(pos2(usable.left() + usable.width() * 0.39, usable.top()),
                 pos2(usable.left() + usable.width() * 0.66, usable.bottom()));
             let actions = egui::Rect::from_min_max(pos2(usable.left() + usable.width() * 0.67, usable.top()), usable.max);
             ui.scope_builder(egui::UiBuilder::new().max_rect(brand), |ui| {
-                ui.vertical_centered(|ui| {
+                ui.vertical(|ui| {
                     ui.add_space(11.0);
                     ui.label(egui::RichText::new("SorrisoServer Mail").size(22.0).strong().color(egui::Color32::WHITE));
                 });
