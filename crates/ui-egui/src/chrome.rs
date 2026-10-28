@@ -422,7 +422,7 @@ pub(crate) fn sync_shown(app: &MailApp) -> SyncShown {
             match progress.current().and_then(|r| app.session.mailbox.account(r.account)) {
                 Some(account) => {
                     let name: String = account.name.chars().filter(|c| !c.is_control()).take(32).collect();
-                    crate::i18n::fmt(tl!("Updating {account}"), &[("account", name.trim())])
+                    format!("Atualizando {}", name.trim())
                 }
                 None => tl!("Send/Receive").to_string(),
             }
