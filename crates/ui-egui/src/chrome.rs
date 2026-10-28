@@ -433,6 +433,22 @@ pub(crate) fn sync_shown(app: &MailApp) -> SyncShown {
     if sync.is_empty() { SyncShown::Nothing } else { SyncShown::Text(sync.clone()) }
 }
 
+/// Persistent offline warning, independent of temporary status messages.
+pub fn offline_notice(app: &MailApp, ui: &mut Ui) {
+    if !app.ui.offline { return; }
+    egui::Panel::top("sorriso_offline_notice")
+        .exact_size(34.0)
+        .show_separator_line(false)
+        .frame(egui::Frame::NONE.fill(egui::Color32::from_rgb(125, 39, 31))
+            .inner_margin(egui::Margin::symmetric(12, 4)))
+        .show(ui, |ui| {
+            ui.horizontal_centered(|ui| {
+                ui.label(egui::RichText::new("●  MODO OFFLINE — Sem sincronização de e-mails. Clique em Offline no banner para reconectar.")
+                    .size(13.0).strong().color(egui::Color32::WHITE));
+            });
+        });
+}
+
 /// The status bar, across the foot of the window.
 pub fn status_bar(app: &mut MailApp, ui: &mut Ui) {
     let t = Tokens::get(ui.ctx());
@@ -445,6 +461,9 @@ pub fn status_bar(app: &mut MailApp, ui: &mut Ui) {
             let full_w = ui.available_width();
             ui.horizontal_centered(|ui| {
                 ui.spacing_mut().item_spacing = vec2(14.0, 0.0);
+                if app.ui.offline {
+                    ui.label(egui::RichText::new("● OFFLINE").size(11.0).strong().color(egui::Color32::from_rgb(190, 40, 35)));
+                }
                 // One line of text, no wider than `most` or the room there is: what doesn't fit
                 // ends in an ellipsis, and the whole of it is shown under the pointer.
                 let st_most = |ui: &mut Ui, s: &str, color: egui::Color32, most: f32| {
