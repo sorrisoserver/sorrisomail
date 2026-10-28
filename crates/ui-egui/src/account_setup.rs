@@ -968,7 +968,13 @@ impl AccountSetup {
     /// Back on the password page, with what went wrong and the servers in view.
     fn refuse(&mut self, why: String) {
         self.go(Page::Password);
-        self.error = why;
+        self.error = if why.contains("the server took too long to answer") {
+            "Problema de conexão: o servidor demorou demais para responder".to_string()
+        } else if let Some(details) = why.strip_prefix("connection problem: ") {
+            format!("Problema de conexão: {details}")
+        } else {
+            why
+        };
         self.settings_open = true;
     }
 
@@ -1582,7 +1588,7 @@ fn page(ui: &mut Ui, t: &Tokens, add: impl FnOnce(&mut Ui)) {
             let center = pos2(r.min.x + 18.0, r.center().y);
             ui.painter().circle_filled(center, 18.0, t.accent);
             icons::paint(ui.painter(), Rect::from_center_size(center, vec2(20.0, 20.0)), "mail", t.on_accent, t.on_accent);
-            ui.painter().text(pos2(r.min.x + 46.0, r.center().y), Align2::LEFT_CENTER, "MailCraft", semibold(17.0), t.text);
+            ui.painter().text(pos2(r.min.x + 46.0, r.center().y), Align2::LEFT_CENTER, "Sorriso Server Mail", semibold(17.0), t.text);
             ui.add_space(10.0);
             add(ui);
         });

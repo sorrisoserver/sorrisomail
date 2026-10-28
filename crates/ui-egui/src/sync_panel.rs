@@ -115,7 +115,7 @@ impl Row {
             RunState::Stopped => tl!("Stopped").to_string(),
             RunState::Done => {
                 if run.new == 0 && run.sent == 0 {
-                    return tl!("Done: up to date").to_string();
+                    return "Concluído: atualizado".to_string();
                 }
                 let mut line = i18n::fmt(tl!("Done: {n} new"), &[("n", &run.new.to_string())]);
                 if run.sent > 0 {
@@ -204,19 +204,19 @@ pub(crate) fn show(app: &mut MailApp, ctx: &egui::Context) {
                     ui.spacing_mut().item_spacing = vec2(8.0, 4.0);
                     // The heading, with Stop while a run goes on, and the way out.
                     ui.horizontal(|ui| {
-                        ui.label(RichText::new(tl!("Send/Receive Progress")).font(semibold(14.0)).color(t.text));
+                        ui.label(RichText::new("Progresso de envio e recebimento").font(semibold(14.0)).color(t.text));
                         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                             let shut = crate::widgets::icon_button(ui, "close", tl!("Close"), 12.0, true);
                             app.hit.add("syncPanelClose", 0, shut.rect);
                             close |= shut.clicked();
                             if syncing {
                                 let r = ui
-                                    .add(egui::Button::new(tl!("Stop")).min_size(vec2(60.0, 24.0)))
+                                    .add(egui::Button::new("Parar").min_size(vec2(60.0, 24.0)))
                                     .on_hover_text(tl!("Stop this Send/Receive; what has arrived stays"));
                                 app.hit.add("syncStop", 0, r.rect);
                                 stop |= r.clicked();
                             }
-                            if app.has_sync_problems() && ui.link(RichText::new(tl!("Copy problems")).font(regular(12.0))).clicked() {
+                            if app.has_sync_problems() && ui.link(RichText::new("Copiar problemas").font(regular(12.0))).clicked() {
                                 ui.ctx().copy_text(app.sync_problem_lines().join("\n"));
                             }
                         });
@@ -360,6 +360,27 @@ pub(crate) fn show(app: &mut MailApp, ctx: &egui::Context) {
     }
 }
 
+fn portuguese_progress(line: &str) -> String {
+    if line == "Waiting" { return "Aguardando".into(); }
+    if line == "Skipped" { return "Ignorado".into(); }
+    if line == "Stopped" { return "Interrompido".into(); }
+    if line == "Starting…" { return "Iniciando…".into(); }
+    if let Some(n) = line.strip_prefix("Done: ") { return format!("Concluído: {}", n.replace(" new", " novas").replace(" sent", " enviadas")); }
+    if let Some(n) = line.strip_suffix(" problems") { return format!("{n} problemas"); }
+    if let Some(n) = line.strip_suffix(" problem") { return format!("{n} problema"); }
+    line.replace("New mail:", "Novos e-mails:").replace("Folders", "Pastas")
+}
+
+fn portuguese_problem(problem: &str) -> String {
+    if problem.contains("couldn't reach") && problem.contains("name couldn't be looked up") {
+        return "Não foi possível conectar ao servidor de e-mail: endereço do servidor não encontrado (DNS). Verifique a conexão e o servidor configurado.".into();
+    }
+    if problem.contains("Couldn't check for new mail") {
+        return problem.replace("Couldn't check for new mail", "Não foi possível verificar novos e-mails");
+    }
+    problem.to_string()
+}
+
 /// An account's name and how it is doing: a bar when the total is known, else a spinner while
 /// it runs; Skip on the right while it waits its turn (its response); and under it, for a
 /// Microsoft account, how far its full messages have got.
@@ -369,7 +390,7 @@ fn account_row(ui: &mut Ui, t: &Tokens, row: &Row) -> Option<egui::Response> {
     let room = r.width() - 90.0;
     crate::theme::paint_clipped(ui.painter(), pos2(r.min.x, r.center().y), room.max(40.0), &row.name, semibold(13.0), t.text);
     let top = r;
-    let line = row.line();
+    let line = portuguese_progress(&row.line());
     let color = match &row.run {
         Some(run) if run.state == RunState::Running => t.text,
         _ if !row.problems.is_empty() => t.red,
@@ -402,7 +423,7 @@ fn account_row(ui: &mut Ui, t: &Tokens, row: &Row) -> Option<egui::Response> {
     // Skip, over the two lines' right end.
     let at = Rect::from_center_size(pos2(top.max.x - 36.0, top.max.y + 2.0), vec2(72.0, 26.0));
     let skip = ui
-        .put(at, egui::Button::new(RichText::new(tl!("Skip")).font(regular(12.5))))
+        .put(at, egui::Button::new(RichText::new("Ignorar").font(regular(12.5))))
         .on_hover_text(tl!("Leave this account out of this Send/Receive"));
     Some(skip)
 }
@@ -413,7 +434,7 @@ fn problem_line(ui: &mut Ui, t: &Tokens, problem: &str) -> Rect {
         .horizontal_top(|ui| {
             let (mark, _) = ui.allocate_exact_size(vec2(10.0, 16.0), Sense::hover());
             ui.painter().circle_filled(pos2(mark.center().x, mark.min.y + 8.0), 2.5, t.red);
-            ui.add(egui::Label::new(RichText::new(problem).font(regular(12.0)).color(t.text)).selectable(true).wrap());
+            ui.add(egui::Label::new(RichText::new(portuguese_problem(problem)).font(regular(12.0)).color(t.text)).selectable(true).wrap());
         })
         .response;
     response.rect

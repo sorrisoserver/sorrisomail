@@ -234,12 +234,111 @@ impl Item {
 
     /// The label on one line, in the interface language.
     fn name(&self) -> String {
-        tl!(self.label).replace("-\n", "-").replace("/\n", "/").replace('\n', " ")
+        sorriso_ribbon_label(self.label).unwrap_or(tl!(self.label)).replace("-\n", "-").replace("/\n", "/").replace('\n', " ")
     }
 
     /// What the tooltip calls it.
     fn tip_text(&self) -> String {
-        if self.tip.is_empty() { self.name() } else { tl!(self.tip).to_string() }
+        if self.tip.is_empty() { self.name() } else { sorriso_ribbon_label(self.tip).unwrap_or(tl!(self.tip)).to_string() }
+    }
+}
+
+// Explicit pt-BR ribbon labels. Some ribbon items use embedded newlines and
+// differ from the one-line catalogue keys; keep this fallback for the branded build.
+fn sorriso_ribbon_label(label: &str) -> Option<&'static str> {
+    // The ribbon declares most labels with embedded newlines (e.g. "Show\nProgress").
+    // Normalize them before looking up the Brazilian Portuguese wording.
+    let normalized = label.replace('\n', " ");
+    match normalized.as_str() {
+        "New Email" => Some("Novo e-mail"),
+        "Reply All" => Some("Responder a todos"),
+        "Unread/ Read" => Some("Não lida/Lida"),
+        "Filter Email" => Some("Filtrar e-mails"),
+        "Send/Receive All Folders" => Some("Enviar/receber todas as pastas"),
+        "Show Progress" => Some("Mostrar progresso"),
+        "Add Account" => Some("Adicionar conta"),
+        "Account Settings" => Some("Configurações da conta"),
+        "New Folder" => Some("Nova pasta"),
+        "Rename Folder" => Some("Renomear pasta"),
+        "Move Folder" => Some("Mover pasta"),
+        "Delete Folder" => Some("Excluir pasta"),
+        "Mark All as Read" => Some("Marcar todas como lidas"),
+        "Run Rules Now" => Some("Executar regras agora"),
+        "Empty Folder" => Some("Esvaziar pasta"),
+        "Remove from Favorites" => Some("Remover dos favoritos"),
+        "Add to Favorites" => Some("Adicionar aos favoritos"),
+        "Export Folder" => Some("Exportar pasta"),
+        "Import" => Some("Importar"),
+        "Folder Pane" => Some("Painel de pastas"),
+        "Reading Pane" => Some("Painel de leitura"),
+        "Show as Conversations" => Some("Mostrar como conversas"),
+        "Message Preview" => Some("Prévia da mensagem"),
+        "Arrange By" => Some("Organizar por"),
+        "Reverse Sort" => Some("Inverter ordenação"),
+        "Ribbon Layout" => Some("Layout da faixa de opções"),
+        "Theme" => Some("Tema"),
+        "Reminders Window" => Some("Janela de lembretes"),
+        "Reset View" => Some("Redefinir exibição"),
+        "Search Commands" => Some("Pesquisar comandos"),
+        "About MailCraft" => Some("Sobre o Sorriso Server Mail"),
+        "Copy Diagnostics" => Some("Copiar diagnóstico"),
+        "Move to Folder" => Some("Mover para pasta"),
+        "Interface Theme" => Some("Tema da interface"),
+        "Search commands" => Some("Pesquisar comandos"),
+        "Rules" => Some("Regras"),
+        "New Items" => Some("Novos itens"),
+        "Reply" => Some("Responder"),
+        "Forward" => Some("Encaminhar"),
+        "Move" => Some("Mover"),
+        "Pin" => Some("Fixar"),
+        "New Contact" => Some("Novo contato"),
+        "Edit Contact" => Some("Editar contato"),
+        "Export Contacts" => Some("Exportar contatos"),
+        "Communicate" => Some("Comunicação"),
+        "Share" => Some("Compartilhar"),
+        "New Task" => Some("Nova tarefa"),
+        "Mark Complete" => Some("Marcar como concluída"),
+        "Edit Task" => Some("Editar tarefa"),
+        "Manage Task" => Some("Gerenciar tarefa"),
+        "Next Week" => Some("Próxima semana"),
+        "No Date" => Some("Sem data"),
+        "This Week" => Some("Esta semana"),
+        "High Importance" => Some("Alta importância"),
+        "Low Importance" => Some("Baixa importância"),
+        "Tags" => Some("Etiquetas"),
+        "Current View" => Some("Exibição atual"),
+        "Filter" => Some("Filtrar"),
+        "Follow Up" => Some("Acompanhamento"),
+        "Clean Up" => Some("Limpeza"),
+        "Actions" => Some("Ações"),
+        "New" => Some("Novo"),
+        "Today" => Some("Hoje"),
+        "Tomorrow" => Some("Amanhã"),
+        "Delete" => Some("Excluir"),
+        "Favorite" => Some("Favorito"),
+        "Font Size" => Some("Tamanho da fonte"),
+        "Font Color" => Some("Cor da fonte"),
+        "Italic" => Some("Itálico"),
+        "Underline" => Some("Sublinhado"),
+        "Bullets" => Some("Marcadores"),
+        "Numbering" => Some("Numeração"),
+        "Increase Indent" => Some("Aumentar recuo"),
+        "Decrease Indent" => Some("Diminuir recuo"),
+        "Clear Formatting" => Some("Limpar formatação"),
+        "Check Names" => Some("Verificar nomes"),
+        "Attach File" => Some("Anexar arquivo"),
+        "Plain Text" => Some("Texto simples"),
+        "Format as Plain Text" => Some("Formatar como texto simples"),
+        "Save Draft" => Some("Salvar rascunho"),
+        "Discard" => Some("Descartar"),
+        "Signature" => Some("Assinatura"),
+        "New message" => Some("Nova mensagem"),
+        "Basic Text" => Some("Texto básico"),
+        "Names" => Some("Nomes"),
+        "Include" => Some("Incluir"),
+        "Draft" => Some("Rascunho"),
+        "Format" => Some("Formato"),
+        _ => None,
     }
 }
 
@@ -580,28 +679,31 @@ fn message(app: &MailApp) -> Tab {
     Tab::of(vec![
         g("Send", vec![Item::big("send", "Send", "compose.send", no()).at(0, 1)]),
         g(
-            "Basic Text",
+            "Texto básico",
             vec![
                 Item::small_menu("font", "font", "Font", "Font", Menu::Font).at(1, 4).plain(),
-                Item::small_menu("fontSize", "fontSize", "Font Size", "Font Size", Menu::FontSize).at(1, 4).plain(),
-                Item::small_menu("fontColor", "fontColor", "Font Color", "Font Color", Menu::FontColor).at(1, 3).plain(),
+                Item::small_menu("fontSize", "fontSize", "Tamanho da fonte", "Tamanho da fonte", Menu::FontSize).at(1, 4).plain(),
+                Item::small_menu("fontColor", "fontColor", "Cor da fonte", "Cor da fonte", Menu::FontColor).at(1, 3).plain(),
                 Item::small("bold", "Bold", "Bold", "format.bold", no()).checked(look.bold && !look.plain).at(1, 2).plain(),
-                Item::small("italic", "Italic", "Italic", "format.italic", no()).checked(look.italic && !look.plain).at(1, 2).plain(),
-                Item::small("underline", "Underline", "Underline", "format.underline", no()).checked(look.underline && !look.plain).at(1, 2).plain(),
-                Item::small("bullets", "Bullets", "Bullets", "format.bullets", no()).checked(look.bullets).at(1, 3).plain(),
-                Item::small("numbering", "Numbering", "Numbering", "format.numbering", no()).checked(look.numbering).at(1, 3).plain(),
-                Item::small("decreaseIndent", "Decrease Indent", "Decrease Indent", "format.outdent", no()).at(1, 4).plain(),
-                Item::small("increaseIndent", "Increase Indent", "Increase Indent", "format.indent", no()).at(1, 4).plain(),
-                Item::small("clearFormatting", "Clear Formatting", "Clear All Formatting", "format.clear", no()).at(1, 5).plain(),
+                Item::small("italic", "Itálico", "Itálico", "format.italic", no()).checked(look.italic && !look.plain).at(1, 2).plain(),
+                Item::small("underline", "Sublinhado", "Sublinhado", "format.underline", no())
+                    .checked(look.underline && !look.plain)
+                    .at(1, 2)
+                    .plain(),
+                Item::small("bullets", "Marcadores", "Marcadores", "format.bullets", no()).checked(look.bullets).at(1, 3).plain(),
+                Item::small("numbering", "Numeração", "Numeração", "format.numbering", no()).checked(look.numbering).at(1, 3).plain(),
+                Item::small("decreaseIndent", "Diminuir recuo", "Diminuir recuo", "format.outdent", no()).at(1, 4).plain(),
+                Item::small("increaseIndent", "Aumentar recuo", "Aumentar recuo", "format.indent", no()).at(1, 4).plain(),
+                Item::small("clearFormatting", "Limpar formatação", "Limpar toda a formatação", "format.clear", no()).at(1, 5).plain(),
             ],
         ),
-        g("Names", vec![Item::big("checkNames", "Check\nNames", "compose.checkNames", no()).at(3, 4)]),
+        g("Nomes", vec![Item::big("checkNames", "Check\nNames", "compose.checkNames", no()).at(3, 4)]),
         g(
-            "Include",
+            "Incluir",
             vec![
                 Item::big("attach", "Attach\nFile", "ui.attach", no()).at(2, 2),
                 Item::big("insertLink", "Link", "compose.link", no()).checked(look.link && !look.plain).at(2, 3),
-                Item::big_menu("signature", "signature", "Signature", "Signature", Menu::Signature).at(2, 3),
+                Item::big_menu("signature", "signature", "Assinatura", "Assinatura", Menu::Signature).at(2, 3),
             ],
         ),
         g(
@@ -616,17 +718,17 @@ fn message(app: &MailApp) -> Tab {
             ],
         ),
         g(
-            "Format",
+            "Formato",
             vec![
                 Item::small("formatHtml", "HTML", "Format as HTML", "compose.formatHtml", no()).checked(!look.plain).at(5, 5),
-                Item::small("formatPlain", "Plain Text", "Format as Plain Text", "compose.formatPlain", no()).checked(look.plain).at(5, 5),
+                Item::small("formatPlain", "Texto simples", "Formatar como texto simples", "compose.formatPlain", no()).checked(look.plain).at(5, 5),
             ],
         ),
         g(
-            "Draft",
+            "Rascunho",
             vec![
                 Item::big("saveDraft", "Save\nDraft", "compose.saveDraft", no()).at(6, 2),
-                Item::big("discard", "Discard", "compose.discard", no()).at(6, 3).plain(),
+                Item::big("discard", "Descartar", "compose.discard", no()).at(6, 3).plain(),
                 Item::big("close", "Close", "compose.close", no()).at(6, 3),
             ],
         ),
@@ -959,12 +1061,12 @@ fn menu_contents(ui: &mut Ui, app: &mut MailApp, menu: Menu) {
                 ui.label(tl!("No signatures yet"));
             }
             for name in &names {
-                if plain_item(ui, name) {
+                if plain_item(ui, if name == "Signature" { "Assinatura" } else { name }) {
                     let _ = app.run("compose.signature", json!({"name": name}));
                 }
             }
             ui.separator();
-            if plain_item(ui, tl!("Signatures…")) {
+            if plain_item(ui, "Assinaturas…") {
                 let _ = app.run("ui.backstage", json!({"value": true, "page": "signatures"}));
             }
         }
@@ -1378,7 +1480,7 @@ fn simplified(app: &mut MailApp, ui: &mut Ui, t: &Tokens, tab: &Tab, area: Rect)
 
 /// A large button of the classic layout.
 fn classic_big(app: &mut MailApp, ui: &mut Ui, item: &Item) {
-    let label = tl!(item.label);
+    let label = sorriso_ribbon_label(item.label).unwrap_or(tl!(item.label));
     match (&item.command, item.menu) {
         (Some((command, params)), _) => {
             let on = app.enabled(command);
@@ -1411,7 +1513,7 @@ fn classic_column(app: &mut MailApp, ui: &mut Ui, items: &[&Item]) {
     }
     stack(ui, |ui| {
         for item in items {
-            let label = Some(tl!(item.label));
+            let label = Some(sorriso_ribbon_label(item.label).unwrap_or(tl!(item.label)));
             match (&item.command, item.menu) {
                 (Some((command, params)), _) => {
                     let on = app.enabled(command);
@@ -1730,6 +1832,40 @@ mod tests {
             seen += 1;
         }
         assert_eq!(seen, 21);
+    }
+
+    #[test]
+    fn sorriso_server_ribbon_labels_and_tooltips_are_in_portuguese() {
+        for (english, portuguese) in [
+            ("Show Progress", "Mostrar progresso"),
+            ("Add Account", "Adicionar conta"),
+            ("Account Settings", "Configurações da conta"),
+            ("New Folder", "Nova pasta"),
+            ("Rename Folder", "Renomear pasta"),
+            ("Folder Pane", "Painel de pastas"),
+            ("Reading Pane", "Painel de leitura"),
+            ("Show as Conversations", "Mostrar como conversas"),
+            ("Search Commands", "Pesquisar comandos"),
+            ("About MailCraft", "Sobre o Sorriso Server Mail"),
+            ("Copy Diagnostics", "Copiar diagnóstico"),
+        ] {
+            assert_eq!(sorriso_ribbon_label(english), Some(portuguese), "{english}");
+        }
+        assert_eq!(sorriso_ribbon_label("Send/Receive\nAll Folders"), Some("Enviar/receber todas as pastas"));
+        for (raw, expected) in [
+            ("Show\nProgress", "Mostrar progresso"),
+            ("Add\nAccount", "Adicionar conta"),
+            ("Account\nSettings", "Configurações da conta"),
+            ("New\nFolder", "Nova pasta"),
+            ("Rename\nFolder", "Renomear pasta"),
+            ("Folder\nPane", "Painel de pastas"),
+            ("Show as\nConversations", "Mostrar como conversas"),
+            ("Search\nCommands", "Pesquisar comandos"),
+            ("About\nMailCraft", "Sobre o Sorriso Server Mail"),
+            ("Copy\nDiagnostics", "Copiar diagnóstico"),
+        ] {
+            assert_eq!(sorriso_ribbon_label(raw), Some(expected));
+        }
     }
 
     /// Mail › Home in the order the simplified row has it, with its split buttons.

@@ -8,8 +8,8 @@ use egui::{Align2, Color32, CornerRadius, FontData, FontDefinitions, FontFamily,
 
 /// MailCraft's own colour, the teal of its icon (and its darker ink for text on light
 /// backgrounds). The interface itself is neutral greys with a blue accent: see [`Tokens`].
-pub const APP_COLOR: Color32 = Color32::from_rgb(0x0B, 0x7F, 0xAB);
-pub const APP_INK: Color32 = Color32::from_rgb(0x08, 0x62, 0x88);
+pub const APP_COLOR: Color32 = Color32::from_rgb(0x13, 0x8E, 0xD2);
+pub const APP_INK: Color32 = Color32::from_rgb(0x10, 0x7E, 0xC5);
 
 /// The interface theme setting (File › Options › General): `System`, which follows the OS (or
 /// browser) light/dark appearance live and is what a new installation starts with, or a fixed
@@ -17,15 +17,16 @@ pub const APP_INK: Color32 = Color32::from_rgb(0x08, 0x62, 0x88);
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(from = "String", into = "String")]
 pub enum Appearance {
+    #[default]
     Light,
     Dark,
-    #[default]
     System,
+    Brand,
 }
 
 impl Appearance {
     /// In menu order.
-    pub const ALL: [Appearance; 3] = [Appearance::System, Appearance::Light, Appearance::Dark];
+    pub const ALL: [Appearance; 2] = [Appearance::Light, Appearance::Dark];
 
     /// The value used in `ui.json` and by the `ui.theme` command.
     pub fn code(self) -> &'static str {
@@ -33,11 +34,16 @@ impl Appearance {
             Appearance::Light => "light",
             Appearance::Dark => "dark",
             Appearance::System => "system",
+            Appearance::Brand => "brand",
         }
     }
 
     pub fn from_code(code: &str) -> Option<Appearance> {
-        Appearance::ALL.into_iter().find(|a| a.code().eq_ignore_ascii_case(code.trim()))
+        match code.trim().to_ascii_lowercase().as_str() {
+            "dark" => Some(Appearance::Dark),
+            "light" | "system" | "brand" => Some(Appearance::Light),
+            _ => None,
+        }
     }
 
     /// The English label (translated with `tl!` where shown).
@@ -45,7 +51,7 @@ impl Appearance {
         match self {
             Appearance::Light => "Light",
             Appearance::Dark => "Dark",
-            Appearance::System => "Use system setting",
+            Appearance::System | Appearance::Brand => "Use system setting",
         }
     }
 
@@ -57,7 +63,7 @@ impl Appearance {
     /// rebuild the font atlas they share every frame, which garbles the text of both.
     pub fn preference(self, system: Option<egui::Theme>) -> egui::ThemePreference {
         match self {
-            Appearance::Light => egui::ThemePreference::Light,
+            Appearance::Brand | Appearance::Light => egui::ThemePreference::Light,
             Appearance::Dark => egui::ThemePreference::Dark,
             Appearance::System => match system {
                 Some(egui::Theme::Dark) => egui::ThemePreference::Dark,
@@ -70,7 +76,7 @@ impl Appearance {
 /// An unknown saved value reads as the default rather than discarding the whole `ui.json`.
 impl From<String> for Appearance {
     fn from(s: String) -> Self {
-        Appearance::from_code(&s).unwrap_or_default()
+        match Appearance::from_code(&s).unwrap_or_default() { Appearance::Dark => Appearance::Dark, _ => Appearance::Light }
     }
 }
 
@@ -212,8 +218,8 @@ impl Tokens {
             hover: Color32::from_rgb(0xE9, 0xE9, 0xE9),
             pressed: Color32::from_rgb(0xD6, 0xD6, 0xD6),
             checked: Color32::from_rgb(0xD6, 0xE8, 0xF8),
-            accent: Color32::from_rgb(0x0F, 0x6C, 0xBD),
-            accent_text: Color32::from_rgb(0x11, 0x5E, 0xA3),
+            accent: Color32::from_rgb(0x13, 0x8E, 0xD2),
+            accent_text: Color32::from_rgb(0x10, 0x7E, 0xC5),
             on_accent: Color32::WHITE,
             input: Color32::WHITE,
             input_border: Color32::from_rgb(0xC4, 0xC4, 0xC4),
@@ -261,8 +267,8 @@ impl Tokens {
             hover: Color32::from_rgb(0x38, 0x38, 0x38),
             pressed: Color32::from_rgb(0x4A, 0x4A, 0x4A),
             checked: Color32::from_rgb(0x1F, 0x3B, 0x57),
-            accent: Color32::from_rgb(0x58, 0xB8, 0xFE),
-            accent_text: Color32::from_rgb(0x82, 0xC7, 0xFF),
+            accent: Color32::from_rgb(0x13, 0x8E, 0xD2),
+            accent_text: Color32::from_rgb(0x58, 0xB8, 0xFE),
             on_accent: Color32::from_rgb(0x0A, 0x18, 0x26),
             input: Color32::from_rgb(0x1F, 0x1F, 0x1F),
             input_border: Color32::from_rgb(0x66, 0x66, 0x66),
@@ -285,8 +291,47 @@ impl Tokens {
             icon_purple: Color32::from_rgb(0xB6, 0x9B, 0xEE),
         }
     }
+    pub fn brand() -> Self {
+        let mut t = Self::light();
+        let navy = Color32::from_rgb(0x07, 0x38, 0x67);
+        let blue = Color32::from_rgb(0x13, 0x8E, 0xD2);
+        let soft = Color32::from_rgb(0xE2, 0xF1, 0xFA);
+        t.title_bar = navy;
+        t.tab_strip = navy;
+        t.nav = blue;
+        t.canvas = soft;
+        t.ribbon = soft;
+        t.panel = soft;
+        t.surface = Color32::WHITE;
+        t.status_bar = navy;
+        t.menu = Color32::WHITE;
+        t.border = Color32::from_rgb(0xB5, 0xD5, 0xE9);
+        t.border_strong = Color32::from_rgb(0x82, 0xB8, 0xD7);
+        t.text = navy;
+        t.text_dim = Color32::from_rgb(0x34, 0x61, 0x81);
+        t.icon = navy;
+        t.hover = Color32::from_rgb(0xC4, 0xE3, 0xF4);
+        t.pressed = Color32::from_rgb(0x9D, 0xD0, 0xEE);
+        t.checked = Color32::from_rgb(0xA7, 0xD7, 0xF3);
+        t.selection = Color32::from_rgb(0xC3, 0xE3, 0xF5);
+        t.accent = blue;
+        t.accent_text = Color32::from_rgb(0x07, 0x58, 0x95);
+        t.on_accent = Color32::WHITE;
+        t.input = Color32::WHITE;
+        t.input_border = Color32::from_rgb(0x82, 0xB8, 0xD7);
+        t.group_label = Color32::from_rgb(0x34, 0x61, 0x81);
+        t.today = soft;
+        t.off_hours = soft;
+        t
+    }
     pub fn get(ctx: &egui::Context) -> Tokens {
-        if ctx.global_style().visuals.dark_mode { Tokens::dark() } else { Tokens::light() }
+        if ctx.data(|d| d.get_temp::<bool>(egui::Id::new("sorriso_brand_theme")).unwrap_or(false)) {
+            Tokens::brand()
+        } else if ctx.global_style().visuals.dark_mode {
+            Tokens::dark()
+        } else {
+            Tokens::light()
+        }
     }
 }
 
@@ -585,7 +630,12 @@ pub fn paint_clipped(painter: &egui::Painter, pos: egui::Pos2, width: f32, text:
 /// and our dark one as its dark style, and `preference` ([`Appearance::preference`]) pins egui
 /// (and the window decorations) to one of them.
 pub fn apply(ctx: &egui::Context, preference: egui::ThemePreference) {
-    ctx.set_visuals_of(egui::Theme::Light, visuals(&Tokens::light()));
+    apply_with_brand(ctx, preference, false);
+}
+
+pub fn apply_with_brand(ctx: &egui::Context, preference: egui::ThemePreference, brand: bool) {
+    ctx.data_mut(|d| d.insert_temp(egui::Id::new("sorriso_brand_theme"), brand));
+    ctx.set_visuals_of(egui::Theme::Light, visuals(&if brand { Tokens::brand() } else { Tokens::light() }));
     ctx.set_visuals_of(egui::Theme::Dark, visuals(&Tokens::dark()));
     ctx.all_styles_mut(|s| {
         s.spacing.item_spacing = egui::vec2(6.0, 4.0);

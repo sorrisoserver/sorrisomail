@@ -537,7 +537,7 @@ pub fn folder_pane(app: &mut MailApp, ui: &mut Ui) {
                 }
             }
             for (account, name, rows) in &lists {
-                if !head(app, ui, *account, if name.is_empty() { tl!("Mailbox") } else { name }) {
+                if !head(app, ui, *account, if name.is_empty() || name == "Mailbox" { "Caixa postal" } else { name }) {
                     continue;
                 }
                 for (f, depth, has_children) in rows {

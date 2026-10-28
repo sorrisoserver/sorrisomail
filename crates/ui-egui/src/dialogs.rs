@@ -1004,16 +1004,14 @@ pub fn show(app: &mut MailApp, ctx: &egui::Context) {
         }
         Dialog::Link { url, error, linked } => {
             let (mut submit, mut remove) = (false, false);
-            let open = window(ctx, tl!("Insert Link"), 420.0, |ui| {
+            let open = window(ctx, "Inserir link", 420.0, |ui| {
                 ui.label(tl!("Address"));
                 let resp = ui.add(egui::TextEdit::singleline(url).hint_text("https://www.example.org").desired_width(f32::INFINITY));
                 if !resp.has_focus() && error.is_empty() {
                     resp.request_focus();
                 }
                 ui.label(
-                    egui::RichText::new(tl!(
-                        "A web address, an email address or a phone number (tel:). With nothing selected, the address is put in as it is."
-                    ))
+                    egui::RichText::new("Informe um endereço da Web, e-mail ou telefone (tel:). Se não houver texto selecionado, o endereço será inserido como informado.")
                     .color(t.text_dim)
                     .size(11.0),
                 );

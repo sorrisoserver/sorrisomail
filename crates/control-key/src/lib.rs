@@ -8,18 +8,18 @@
 use std::path::{Path, PathBuf};
 
 /// The app's settings folder (preferences, logs, key files): macOS
-/// `~/Library/Application Support/MailCraft`, Windows `%APPDATA%\MailCraft`, otherwise
+/// `~/Library/Application Support/Sorriso Server Mail`, Windows `%APPDATA%\MailCraft`, otherwise
 /// `$XDG_CONFIG_HOME/mailcraft` or `~/.config/mailcraft`.
 pub fn settings_dir() -> Option<PathBuf> {
     if cfg!(target_os = "macos") {
-        std::env::var_os("HOME").map(|h| PathBuf::from(h).join("Library/Application Support/MailCraft"))
+        std::env::var_os("HOME").map(|h| PathBuf::from(h).join("Library/Application Support/Sorriso Server Mail"))
     } else if cfg!(windows) {
-        std::env::var_os("APPDATA").map(|a| PathBuf::from(a).join("MailCraft"))
+        std::env::var_os("APPDATA").map(|a| PathBuf::from(a).join("Sorriso Server Mail"))
     } else {
         std::env::var_os("XDG_CONFIG_HOME")
             .map(PathBuf::from)
             .or_else(|| std::env::var_os("HOME").map(|h| PathBuf::from(h).join(".config")))
-            .map(|c| c.join("mailcraft"))
+            .map(|c| c.join("sorriso-server-mail"))
     }
 }
 
@@ -81,7 +81,7 @@ mod tests {
     fn settings_dir_is_the_apps_folder() {
         if let Some(d) = settings_dir() {
             let name = d.file_name().and_then(|n| n.to_str()).unwrap_or("");
-            assert!(name == "mailcraft" || name == "MailCraft", "{}", d.display());
+            assert!(name == "sorriso-server-mail" || name == "Sorriso Server Mail", "{}", d.display());
         }
     }
 }

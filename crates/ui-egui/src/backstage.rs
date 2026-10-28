@@ -16,6 +16,7 @@ pub const PAGES: &[(&str, &str, &str)] = &[
     ("open", "Open & Export", "import"),
     ("options", "Options", "options"),
     ("signatures", "Signatures", "signature"),
+    ("license", "Licença de uso", "help"),
     ("about", "About", "help"),
 ];
 
@@ -75,6 +76,7 @@ pub fn show(app: &mut MailApp, ui: &mut Ui) {
                     "open" => open(app, ui, &t),
                     "options" => options(app, ui, &t),
                     "signatures" => crate::signatures::page(app, ui, &t),
+                    "license" => license_info(ui, &t),
                     "about" => about(app, ui, &t),
                     _ => info(app, ui, &t),
                 }
@@ -271,11 +273,11 @@ fn info(app: &mut MailApp, ui: &mut Ui, t: &Tokens) {
         let n = |k: &str| v.get(k).and_then(serde_json::Value::as_u64).unwrap_or(0);
         let line = format!(
             "{} · {} · {} · {} · {}",
-            tln!(n("messages"), "{n} message", "{n} messages"),
-            tln!(n("unread"), "{n} unread", "{n} unread"),
-            tln!(n("contacts"), "{n} contact", "{n} contacts"),
-            tln!(n("events"), "{n} event", "{n} events"),
-            tln!(n("tasks"), "{n} task", "{n} tasks"),
+            format!("{} itens", n("messages")),
+            format!("{} não lidas", n("unread")),
+            format!("{} contatos", n("contacts")),
+            format!("{} eventos", n("events")),
+            format!("{} tarefas", n("tasks")),
         );
         ui.label(egui::RichText::new(line).color(t.text));
         let place = match (&app.session.path, app.services.persist.is_some()) {
@@ -284,6 +286,25 @@ fn info(app: &mut MailApp, ui: &mut Ui, t: &Tokens) {
             (None, false) => tl!("Not kept anywhere yet: use Open & Export › Save Mailbox As.").to_string(),
         };
         ui.label(egui::RichText::new(place).color(t.text_dim));
+        if let Some(path) = &app.session.path {
+            // A mailbox uses an index plus a sibling .blobs directory. Scan only
+            // on demand: walking a 60 GB mailbox on every UI frame would freeze it.
+            let key = ui.id().with("sorriso_mailbox_disk_usage");
+            let current = path.to_string_lossy().to_string();
+            let previous: Option<(String, u64)> = ui.ctx().data(|d| d.get_temp(key));
+            let refresh = ui.button("Atualizar espaço utilizado").clicked();
+            let size = if refresh || previous.as_ref().is_none_or(|(name, _)| *name != current) {
+                let mut blobs = path.as_os_str().to_os_string();
+                blobs.push(".blobs");
+                let amount = mailbox_disk_bytes(path).saturating_add(mailbox_tree_bytes(std::path::Path::new(&blobs)));
+                ui.ctx().data_mut(|d| d.insert_temp(key, (current, amount)));
+                amount
+            } else {
+                previous.map_or(0, |(_, bytes)| bytes)
+            };
+            ui.label(egui::RichText::new(format!("Espaço local utilizado: {:.2} GB ({:.2} GiB)", size as f64 / 1_000_000_000.0, size as f64 / 1_073_741_824.0)).color(t.text));
+        }
+
     }
     section(ui, tl!("Rules and Categories"), t);
     if tile(ui, "rules", tl!("Manage Rules"), tl!("What happens to mail as it arrives"), t) {
@@ -292,6 +313,30 @@ fn info(app: &mut MailApp, ui: &mut Ui, t: &Tokens) {
     if tile(ui, "categorize", tl!("Categories"), tl!("Names and colours for sorting mail, events, people and tasks"), t) {
         let _ = app.run("ui.dialog", json!({"name": "categories"}));
     }
+}
+
+/// Size of an individual file, without reading its contents.
+fn mailbox_disk_bytes(path: &std::path::Path) -> u64 {
+    std::fs::metadata(path).map_or(0, |meta| if meta.is_file() { meta.len() } else { 0 })
+}
+
+/// Walk the content directory iteratively, only when the owner opens or refreshes
+/// the storage view. Never follow directory symlinks outside the mailbox.
+fn mailbox_tree_bytes(root: &std::path::Path) -> u64 {
+    let mut bytes = 0u64;
+    let mut pending = vec![root.to_path_buf()];
+    while let Some(dir) = pending.pop() {
+        let Ok(entries) = std::fs::read_dir(dir) else { continue };
+        for entry in entries.flatten() {
+            let Ok(kind) = entry.file_type() else { continue };
+            if kind.is_dir() {
+                pending.push(entry.path());
+            } else if kind.is_file() {
+                bytes = bytes.saturating_add(mailbox_disk_bytes(&entry.path()));
+            }
+        }
+    }
+    bytes
 }
 
 /// "Download messages in full" for a Microsoft account: everything, or up to a size (larger ones
@@ -388,23 +433,6 @@ fn options(app: &mut MailApp, ui: &mut Ui, t: &Tokens) {
             for a in crate::theme::Appearance::ALL {
                 if ui.selectable_label(a == cur, tl!(a.label())).clicked() {
                     let _ = app.run("ui.theme", json!({"value": a.code()}));
-                }
-            }
-        });
-    });
-    row(ui, tl!("Language"), |ui| {
-        // Each language by its own name, so the owner finds theirs whatever the window speaks.
-        let name = |l: crate::i18n::Lang| l.picker_name();
-        let auto = app.ui.language == crate::i18n::AUTO;
-        let cur = app.language();
-        let shown = if auto { tl!("Automatic").to_string() } else { name(cur) };
-        egui::ComboBox::from_id_salt("opt_language").selected_text(shown).show_ui(ui, |ui| {
-            if ui.selectable_label(auto, tl!("Automatic")).clicked() {
-                let _ = app.run("ui.language", json!({"language": crate::i18n::AUTO}));
-            }
-            for l in crate::i18n::Lang::available() {
-                if ui.selectable_label(!auto && l == cur, name(l)).clicked() {
-                    let _ = app.run("ui.language", json!({"language": l.code()}));
                 }
             }
         });
@@ -638,35 +666,32 @@ pub(crate) fn contributors(ui: &mut Ui) {
     });
 }
 
-fn about(app: &mut MailApp, ui: &mut Ui, t: &Tokens) {
-    heading(ui, tl!("About MailCraft"), t);
-    ui.label(egui::RichText::new(crate::i18n::fmt(tl!("Version {version}"), &[("version", env!("CARGO_PKG_VERSION"))])).color(t.text_dim));
-    ui.label(tl!(
-        "Mail, calendar, people and tasks, written from scratch in Rust. It runs natively on macOS, Windows, Linux and BSD, and in the browser."
-    ));
-    ui.label(tl!("Open source under the MIT License or the Apache License 2.0, at your option."));
-    if app.services.update_check.is_some() {
-        section(ui, tl!("Updates"), t);
-        crate::updates::about(app, ui, t);
+fn license_info(ui: &mut Ui, t: &Tokens) {
+    heading(ui, "Licença comercial de uso", t);
+    section(ui, "Situação da licença", t);
+    ui.label("Versão de avaliação — ativação comercial ainda não habilitada.");
+    ui.label("Esta compilação não solicita nem valida chaves de licença.");
+    section(ui, "Próximas funções", t);
+    ui.label("Ativação por cliente, validade, renovação, período de tolerância offline e gestão das licenças.");
+    section(ui, "Atendimento", t);
+    ui.label("Sorriso Server — WhatsApp (66) 99685-7219");
+    section(ui, "Licenças de software livre", t);
+    ui.label("A licença comercial do produto não substitui os direitos e os avisos das dependências de código aberto.");
+}
+
+fn about(_app: &mut MailApp, ui: &mut Ui, t: &Tokens) {
+    heading(ui, "Sobre o Sorriso Server Mail", t);
+    ui.label(egui::RichText::new(concat!("Versão ", env!("CARGO_PKG_VERSION"), " — Sorriso Alpha")).color(t.text_dim));
+    ui.add_space(8.0);
+    section(ui, "Sorriso Server Mail", t);
+    ui.label("Aplicativo de e-mail, calendário, contatos e tarefas para uso profissional.");
+    section(ui, "Suporte técnico", t);
+    ui.label("Atendimento Sorriso Server");
+    if ui.link("WhatsApp: (66) 99685-7219").clicked() {
+        ui.ctx().open_url(egui::OpenUrl::new_tab("https://wa.me/5566996857219"));
     }
-    section(ui, tl!("Contributors"), t);
-    contributors(ui);
-    if ui.button(tl!("Show Contributors")).clicked() {
-        app.ui.backstage = false;
-        let _ = app.run("ui.dialog", json!({"name": "contributors"}));
-    }
-    section(ui, tl!("What it is made of"), t);
-    ui.label(tl!("The interface fonts are Inter, Source Sans 3 and JetBrains Mono (SIL Open Font License 1.1). Every icon is drawn in code and is original work. No artwork, fonts or text from other mail programs are included."));
-    section(ui, tl!("Your mail stays yours"), t);
-    ui.label(tl!("Messages are shown without running anything in them, and the pictures a message keeps on the web are downloaded only when you ask. Passwords are kept in memory only while the app is open."));
-    section(ui, tl!("Scripts and agents"), t);
-    let parity = mailcraft_engine::catalog::parity(&app.session.registry);
-    ui.label(crate::i18n::fmt(
-        tl!("Everything the interface does is a command: {commands} of them, covering {percent}% of the feature catalog. The command line, the control channel and the MCP server run the same commands."),
-        &[("commands", &parity["commands"].to_string()), ("percent", &parity["percent"].to_string())],
-    ));
-    if ui.button(tl!("Search Commands")).clicked() {
-        app.ui.backstage = false;
-        let _ = app.run("ui.dialog", json!({"name": "commands"}));
-    }
+    section(ui, "Privacidade e segurança", t);
+    ui.label("Mensagens são apresentadas sem executar conteúdo remoto. Imagens externas exigem autorização.");
+    section(ui, "Software livre e licenças", t);
+    ui.label("Baseado em MailCraft e componentes de código aberto, distribuídos conforme as licenças MIT ou Apache 2.0. Consulte os arquivos de licença, avisos e atribuições fornecidos com a distribuição.");
 }

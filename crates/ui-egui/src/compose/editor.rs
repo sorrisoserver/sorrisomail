@@ -753,7 +753,7 @@ pub(crate) fn show_doc(app: &mut MailApp, ui: &mut Ui, which: Which, min_height:
         }
     }
     if layout.len() == 0 && !focused {
-        let hint = if which == Which::Message { tl!("Write your message") } else { tl!("Write your signature") };
+        let hint = if which == Which::Message { "Escreva sua mensagem" } else { tl!("Write your signature") };
         painter.text(origin, Align2::LEFT_TOP, hint, regular(BASE_SIZE), t.text_disabled);
     }
     // The selected picture: a frame, and the corner that sizes it.

@@ -45,6 +45,7 @@ pub enum Lang {
     German,
     Spanish,
     Italian,
+    BrazilianPortuguese,
     /// Accented look-alikes of the English text, for finding text that skips translation. Set by
     /// command only; never offered.
     Pseudo,
@@ -52,7 +53,7 @@ pub enum Lang {
 
 impl Lang {
     /// Every language there is a name for (whether or not it has a catalogue yet).
-    pub const ALL: [Lang; 6] = [Lang::English, Lang::French, Lang::German, Lang::Spanish, Lang::Italian, Lang::Pseudo];
+    pub const ALL: [Lang; 7] = [Lang::English, Lang::French, Lang::German, Lang::Spanish, Lang::Italian, Lang::BrazilianPortuguese, Lang::Pseudo];
 
     /// Its code: `en`, `fr`, `pseudo` (the settings' and the commands' value; the `.po` file's name).
     pub fn code(self) -> &'static str {
@@ -62,6 +63,7 @@ impl Lang {
             Lang::German => "de",
             Lang::Spanish => "es",
             Lang::Italian => "it",
+            Lang::BrazilianPortuguese => "pt-BR",
             Lang::Pseudo => "pseudo",
         }
     }
@@ -80,6 +82,7 @@ impl Lang {
             "de" => Some(Lang::German),
             "es" => Some(Lang::Spanish),
             "it" => Some(Lang::Italian),
+            "pt" => Some(Lang::BrazilianPortuguese),
             _ => None,
         }
     }
@@ -92,6 +95,7 @@ impl Lang {
             Lang::German => "Deutsch",
             Lang::Spanish => "Español",
             Lang::Italian => "Italiano",
+            Lang::BrazilianPortuguese => "Português (Brasil)",
             Lang::Pseudo => "Pseudo",
         }
     }

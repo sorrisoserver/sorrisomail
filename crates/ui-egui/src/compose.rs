@@ -224,9 +224,9 @@ pub fn show(app: &mut MailApp, ui: &mut Ui) {
     // What this is, and the actions.
     let (bar, _) = ui.allocate_exact_size(vec2(ui.available_width(), 44.0), Sense::hover());
     let title = match c.mode {
-        ComposeMode::New => tl!("New message"),
+        ComposeMode::New => "Nova mensagem",
         ComposeMode::Reply => tl!("Reply"),
-        ComposeMode::ReplyAll => tl!("Reply all"),
+        ComposeMode::ReplyAll => "Responder a todos",
         ComposeMode::Forward => tl!("Forward"),
         ComposeMode::Draft => tl!("Draft"),
     };
@@ -242,10 +242,10 @@ pub fn show(app: &mut MailApp, ui: &mut Ui) {
         if crate::widgets::icon_text_button(ui, "attach", tl!("Attach"), true).clicked() {
             let _ = app.run("ui.attach", json!({}));
         }
-        if crate::widgets::icon_text_button(ui, "saveDraft", tl!("Save draft"), c.dirty || !c.draft).clicked() {
+        if crate::widgets::icon_text_button(ui, "saveDraft", "Salvar rascunho", c.dirty || !c.draft).clicked() {
             let _ = app.run("compose.saveDraft", json!({}));
         }
-        if crate::widgets::icon_text_button(ui, "discard", tl!("Discard"), true).clicked() {
+        if crate::widgets::icon_text_button(ui, "discard", "Descartar", true).clicked() {
             let _ = app.run("compose.discard", json!({}));
         }
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {

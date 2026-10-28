@@ -519,6 +519,8 @@ struct SigningIn {
 #[serde(default, rename_all = "camelCase")]
 pub struct UiState {
     pub tab: String,
+    /// When true, user-requested network activity is paused until back online.
+    pub offline: bool,
     pub backstage: bool,
     pub backstage_page: String,
     pub ribbon_collapsed: bool,
@@ -590,11 +592,12 @@ impl Default for UiState {
     fn default() -> Self {
         UiState {
             tab: "Home".into(),
+            offline: false,
             backstage: false,
             backstage_page: "info".into(),
             ribbon_collapsed: false,
             ribbon_mode: ribbon::Mode::default(),
-            theme: theme::Appearance::default(),
+            theme: theme::Appearance::Light,
             interface_size: theme::InterfaceSize::default(),
             window: None,
             language: i18n::AUTO.into(),
@@ -1260,7 +1263,7 @@ impl MailApp {
         match self.session.registry.get(id) {
             Some(s) => (s.enabled)(&self.session).is_none(),
             None if id == "ui.sync" => {
-                self.session.enabled("sync.request")
+                !self.ui.offline && self.session.enabled("sync.request")
                     && self.services.sync.is_some()
                     && self.sync_rx.is_none()
                     && self.graph_rx.is_none()
@@ -1269,6 +1272,7 @@ impl MailApp {
             None if id == "ui.cancelSignIn" => self.signing_in.is_some() || self.approving(),
             None if id == "ui.cancelSync" => self.sync_rx.is_some(),
             None if id == "ui.moreResultsOnServer" => {
+                if self.ui.offline { return false; }
                 matches!(self.server_link(), server_search::Link::Ask | server_search::Link::NotConnected { retry: true })
             }
             None if id == "ui.copySelection" => self.text_selection.any(),
@@ -1291,6 +1295,11 @@ impl MailApp {
             }
             self.dialog = dialogs::open_dialog(self, name, &params);
             return Ok(json!({"pending": name}));
+        }
+        if self.ui.offline && (id == "ui.checkForUpdates" || id == "ui.sync" || id == "sync.request" || id == "ui.checkCalendar" || id == "ui.moreResultsOnServer" || id == "ui.joinMeeting" || id == "ui.connectFavorites" || id == "ui.connectMicrosoft" || id == "ui.retryApproval") {
+            let message = "Modo offline: operações de rede suspensas.".to_string();
+            self.status(message.clone());
+            return Err(message);
         }
         // A message not fetched yet is fetched first, and then the command goes on (R3.2).
         if let Some(r) = self.fetch_first(id, &params) {
@@ -1485,18 +1494,9 @@ impl MailApp {
                 None => Err("`value` is light, dark or system".into()),
             },
             "ui.language" => {
-                let code = s("language").unwrap_or_default();
-                let lang = i18n::Lang::from_code(code);
-                if code.trim().eq_ignore_ascii_case(i18n::AUTO) {
-                    self.ui.language = i18n::AUTO.into();
-                } else if let Some(lang) = lang.filter(|l| *l == i18n::Lang::Pseudo || i18n::Lang::available().contains(l)) {
-                    self.ui.language = lang.code().into();
-                } else {
-                    let codes: Vec<&str> = i18n::Lang::available().iter().map(|l| l.code()).collect();
-                    return Some(Err(format!("`language` is auto or one of: {}", codes.join(", "))));
-                }
+                self.ui.language = "pt-BR".into();
                 self.apply_language();
-                Ok(json!({"language": self.ui.language, "inForce": self.language().code()}))
+                Ok(json!({"language": "pt-BR", "inForce": "pt-BR"}))
             }
             "ui.interfaceSize" => match p.get("value").and_then(Value::as_f64).and_then(theme::InterfaceSize::from_percent) {
                 Some(size) => {
@@ -1836,6 +1836,7 @@ impl MailApp {
     /// password the first time, or has the owner sign in on the provider's page; the answer is
     /// kept in memory until the app closes, and by the operating system when that is wanted.
     fn start_sync(&mut self, p: &Value) -> Result<Value, String> {
+        if self.ui.offline { return Err("Modo offline: conecte-se para enviar ou receber mensagens.".into()); }
         if self.sync_rx.is_some() || self.graph_rx.is_some() {
             return Err(tl!("Send/Receive is already running").to_string());
         }
@@ -2085,6 +2086,7 @@ impl MailApp {
     /// round when the app starts and every few minutes after (the owner's `syncMinutes`). A round
     /// that started by itself skips accounts it would have to ask about.
     fn auto_sync(&mut self) {
+        if self.ui.offline { return; }
         // Something the owner did (a read mark, a move, a message to send) waits while a long run
         // is still bringing mail down: the run is called off, which loses nothing, and the next
         // one tells the server first.
@@ -2743,7 +2745,7 @@ impl MailApp {
     /// The interface language: the owner's choice (`ui.json`'s `language`), with the system's
     /// locale for Automatic.
     pub fn language(&self) -> i18n::Lang {
-        i18n::Lang::from_pref(&self.ui.language, self.services.system_locale.as_deref())
+        i18n::Lang::BrazilianPortuguese
     }
 
     /// Put the interface language in force: the window's text, the engine's, and the host's
@@ -2773,8 +2775,12 @@ impl MailApp {
         }
         // Settled from the main window's input, so every window has the same theme.
         let preference = self.ui.theme.preference(ctx.system_theme());
-        if self.applied_theme != Some(preference) {
-            theme::apply(ctx, preference);
+        // The existing saved "system" preference also selects our institutional palette.
+        // This ensures upgrades from older installations show the new blue appearance.
+        let brand = false;
+        let was_brand = ctx.data(|d| d.get_temp::<bool>(egui::Id::new("sorriso_brand_theme")).unwrap_or(false));
+        if self.applied_theme != Some(preference) || brand != was_brand {
+            theme::apply_with_brand(ctx, preference, brand);
             self.applied_theme = Some(preference);
         }
         let zoom = self.ui.interface_size.zoom_factor();
@@ -3203,13 +3209,24 @@ impl MailApp {
         } else {
             // The module bar stands beside the tabs and the ribbon, from under the title bar down
             // to the status bar across the window's foot: both are laid out before the ribbon.
-            chrome::title_bar(self, ui);
+            // The native Windows caption already provides window controls; hide the redundant
+            // in-app quick-access/diagnostics title row. Keep integrated macOS controls.
+            if self.integrated_titlebar {
+                chrome::title_bar(self, ui);
+            }
+            chrome::sorriso_brand_banner(self, ui);
+            chrome::offline_notice(self, ui);
             chrome::sync_bar_rest(self, ui.ctx());
             chrome::status_bar(self, ui);
             // The question about checking for new versions, at the first starts: above the status bar.
             updates::question(self, ui);
             nav::module_bar(self, ui);
+            // Always show Outlook-style tabs and ribbon, including in Mail.
+            // The mail module additionally shows its focused action/search toolbar.
             ribbon::show(self, ui);
+            if self.session.view.module == mailcraft_engine::Module::Mail {
+                chrome::sorriso_compact_toolbar(self, ui);
+            }
             egui::CentralPanel::default().frame(egui::Frame::NONE.fill(t.canvas)).show(ui, |ui| match self.session.view.module {
                 mailcraft_engine::Module::Mail => mail_view::show(self, ui),
                 mailcraft_engine::Module::Calendar => calendar_view::show(self, ui),
@@ -3224,7 +3241,7 @@ impl MailApp {
         agent_gate::show(self, &ctx);
         self.by_hand = false;
         self.refusal();
-        let title = format!("{} - MailCraft", self.title_stem());
+        let title = format!("{} - Sorriso Server Mail", self.title_stem());
         if title != self.sent_title {
             ctx.send_viewport_cmd(egui::ViewportCommand::Title(title.clone()));
             self.sent_title = title;

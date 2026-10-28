@@ -158,7 +158,15 @@ fn row_height(preview_lines: u8) -> f32 {
 /// A group heading of the list in the interface language: the engine's dates (`Today`) are
 /// names the catalogue has, and so is the heading of what is pinned.
 fn group_name(group: &str) -> &str {
-    if group == "Pinned" { tl!("Pinned") } else { tl!(group) }
+    match group {
+        "Two Weeks Ago" => "Há duas semanas",
+        "Three Weeks Ago" => "Há três semanas",
+        "Last Week" => "Semana passada",
+        "Last Month" => "Mês passado",
+        "Older" => "Mais antigas",
+        "Pinned" => tl!("Pinned"),
+        _ => tl!(group),
+    }
 }
 
 /// What the arrangement is called in the list's header, in the interface language.

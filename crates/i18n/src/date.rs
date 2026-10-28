@@ -74,7 +74,9 @@ impl Lang {
     pub fn conventions(self) -> Conventions {
         match self {
             Lang::English | Lang::Pseudo => Conventions { twelve_hour: true, week_start: 6, pad_numeric: false },
-            Lang::French | Lang::German | Lang::Spanish | Lang::Italian => Conventions { twelve_hour: false, week_start: 0, pad_numeric: true },
+            Lang::French | Lang::German | Lang::Spanish | Lang::Italian | Lang::BrazilianPortuguese => {
+                Conventions { twelve_hour: false, week_start: 0, pad_numeric: true }
+            }
         }
     }
 }

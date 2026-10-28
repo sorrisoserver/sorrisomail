@@ -69,7 +69,7 @@ const MAC_LIGHTS_LEFT: f32 = 10.0;
 pub const MAC_CONTENT_LEFT: f32 = MAC_LIGHTS_LEFT + 2.0 * MAC_LIGHT_PITCH + MAC_LIGHT + (MAC_TITLE_BAR - MAC_LIGHT) / 2.0;
 
 /// The search box: typing filters the message list as you go; Escape clears it.
-fn search_box(app: &mut MailApp, ui: &mut Ui, rect: Rect) {
+pub(crate) fn search_box(app: &mut MailApp, ui: &mut Ui, rect: Rect) {
     let t = Tokens::get(ui.ctx());
     let id = ui.id().with("search_box");
     let focused = ui.memory(|m| m.has_focus(id));
@@ -93,10 +93,10 @@ fn search_box(app: &mut MailApp, ui: &mut Ui, rect: Rect) {
     let scope_w = if mail_search { 104.0 } else { 0.0 };
     let edit_rect = Rect::from_min_max(pos2(rect.min.x + 28.0, rect.min.y + 1.0), pos2(rect.max.x - scope_w - 4.0, rect.max.y - 1.0));
     let hint = match app.session.view.module {
-        Module::People => tl!("Search people"),
+        Module::People => "Pesquisar pessoas",
         // Calendar and Tasks have no search of their own yet: what is typed looks in the mail.
-        Module::Calendar | Module::Tasks => tl!("Search mail"),
-        Module::Mail => tl!("Search mail (try from:, has:attachment, is:unread)"),
+        Module::Calendar | Module::Tasks => "Pesquisar e-mails",
+        Module::Mail => "Pesquisar e-mails",
     };
     // The tabs' size in the tall box of the title row; the small one in the macOS title bar.
     let font = if rect.height() >= 30.0 { regular(13.0) } else { TypeRung::Control.regular() };
@@ -220,10 +220,173 @@ pub fn title_bar(app: &mut MailApp, ui: &mut Ui) {
             // The search box, centred, as wide as the space allows.
             let room = (right_start - qat_end - 40.0).max(0.0);
             let w = room.min(520.0);
-            if w >= 220.0 {
+            if w >= 220.0 && app.session.view.module != Module::Mail {
                 let cx = full.center().x.clamp(qat_end + 20.0 + w / 2.0, (right_start - 20.0 - w / 2.0).max(qat_end + 20.0 + w / 2.0));
                 search_box(app, ui, Rect::from_center_size(pos2(cx, full.center().y), vec2(w, search_h)));
             }
+        });
+}
+
+/// Branded header shown above the ribbon. Static links only until an authenticated
+/// Sorriso Server release feed is deployed.
+pub fn sorriso_brand_banner(app: &mut MailApp, ui: &mut Ui) {
+    let left = egui::Color32::from_rgb(4, 45, 89);
+    let right = egui::Color32::from_rgb(6, 112, 197);
+    egui::Panel::top("sorriso_brand_banner")
+        .exact_size(55.0)
+        .show_separator_line(false)
+        .frame(egui::Frame::NONE.fill(left))
+        .show(ui, |ui| {
+            let area = ui.max_rect();
+            // Layered gradient, rather than the solid rectangle of earlier alphas.
+            let bands = 80;
+            for i in 0..bands {
+                let ratio = i as f32 / bands as f32;
+                let x0 = area.left() + area.width() * ratio;
+                let x1 = area.left() + area.width() * (i + 1) as f32 / bands as f32 + 1.0;
+                let mix = |a: u8, b: u8| ((a as f32 * (1.0 - ratio) + b as f32 * ratio) as u8);
+                let color = egui::Color32::from_rgb(mix(left.r(), right.r()), mix(left.g(), right.g()), mix(left.b(), right.b()));
+                ui.painter().rect_filled(egui::Rect::from_min_max(pos2(x0, area.top()), pos2(x1, area.bottom())), 0.0, color);
+            }
+            // Subtle graphics, clipped to the header, matching Sorriso branding.
+            let graphics = ui.painter().with_clip_rect(area);
+            graphics.circle_stroke(pos2(area.right() - 110.0, area.center().y - 35.0), 114.0,
+                Stroke::new(24.0, egui::Color32::from_rgba_unmultiplied(62, 178, 230, 35)));
+            graphics.circle_stroke(pos2(area.left() + 190.0, area.top() - 100.0), 155.0,
+                Stroke::new(28.0, egui::Color32::from_rgba_unmultiplied(78, 185, 234, 25)));
+            // Absolute regions ensure that center support never hugs the brand or buttons.
+            let usable = egui::Rect::from_min_max(pos2(area.left() + 7.0, area.top() + 3.0), pos2(area.right() - 18.0, area.bottom() - 3.0));
+            let brand = egui::Rect::from_min_max(usable.min, pos2(usable.left() + usable.width() * 0.38, usable.bottom()));
+            let support = egui::Rect::from_min_max(pos2(usable.left() + usable.width() * 0.39, usable.top()),
+                pos2(usable.left() + usable.width() * 0.66, usable.bottom()));
+            let actions = egui::Rect::from_min_max(pos2(usable.left() + usable.width() * 0.67, usable.top()), usable.max);
+            ui.scope_builder(egui::UiBuilder::new().max_rect(brand), |ui| {
+                ui.vertical(|ui| {
+                    ui.add_space(11.0);
+                    ui.label(egui::RichText::new("SorrisoServer Mail").size(22.0).strong().color(egui::Color32::WHITE));
+                });
+            });
+            ui.scope_builder(egui::UiBuilder::new().max_rect(support), |ui| {
+                ui.vertical_centered(|ui| {
+                    ui.add_space(6.0);
+                    ui.label(egui::RichText::new("Suporte técnico e atendimento especializado").size(12.0).strong()
+                        .color(egui::Color32::from_rgb(206,235,255)));
+                    if ui.link(egui::RichText::new("WhatsApp (66) 99685-7219").size(15.0).strong()
+                        .color(egui::Color32::WHITE)).clicked() {
+                        ui.ctx().open_url(egui::OpenUrl::new_tab("https://wa.me/5566996857219"));
+                    }
+                });
+            });
+            ui.scope_builder(egui::UiBuilder::new().max_rect(actions), |ui| {
+                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                    let online = !app.ui.offline;
+                    let label = if online { "Online" } else { "Offline" };
+                    let secondary = egui::Button::new(egui::RichText::new(label).size(13.0).strong()
+                        .color(egui::Color32::WHITE))
+                        .fill(if online { egui::Color32::from_rgb(7, 72, 137) } else { egui::Color32::from_rgb(80, 94, 114) })
+                        .stroke(Stroke::new(1.0, egui::Color32::from_rgb(166,221,252)))
+                        .corner_radius(7.0).min_size(vec2(115.0, 38.0));
+                    if ui.add(secondary).on_hover_text("Alternar modo de conexão. Offline suspende sincronizações; tarefas de rede em andamento podem levar alguns instantes para encerrar.").clicked() {
+                        app.ui.offline = !app.ui.offline;
+                        if app.ui.offline {
+                            app.services.sync_cancel.store(true, std::sync::atomic::Ordering::Relaxed);
+                        }
+                        app.status(if !app.ui.offline {
+                            "Modo Online: conexão com servidores permitida.".to_string()
+                        } else {
+                            "MODO OFFLINE: sincronização suspensa. Aguarde o término de conexões em andamento.".to_string()
+                        });
+                    }
+                    let primary = egui::Button::new(egui::RichText::new("Verificar atualizações").size(13.0).strong()
+                        .color(egui::Color32::from_rgb(5, 86, 169)))
+                        .fill(egui::Color32::WHITE).corner_radius(7.0).min_size(vec2(170.0, 38.0));
+                    if ui.add(primary).clicked() {
+                        if app.services.update_check.is_some() {
+                            let _ = app.run("ui.checkForUpdates", json!({}));
+                        } else {
+                            app.status("Atualizações automáticas ainda não disponíveis nesta versão de testes.".to_string());
+                        }
+                    }
+                });
+            });
+        });
+}
+
+/// Compact command bar for the SorrisoServer Mail inbox.
+/// Keeps the existing engine actions; there is no separate fake UI state.
+/// Outlook-style command row with visible labels and a separate search row.
+pub fn sorriso_compact_toolbar(app: &mut MailApp, ui: &mut Ui) {
+    let surface = egui::Color32::from_rgb(249, 251, 254);
+    egui::Panel::top("sorriso_compact_toolbar")
+        .exact_size(52.0)
+        .show_separator_line(true)
+        .frame(egui::Frame::NONE.fill(surface).inner_margin(egui::Margin::symmetric(12, 5)))
+        .show(ui, |ui| {
+            ui.horizontal_centered(|ui| {
+                ui.spacing_mut().item_spacing.x = 4.0;
+                let actions = [
+                    ("newMail", "Novo e-mail", "mail.new"),
+                    ("delete", "Excluir", "mail.delete"),
+                    ("archive", "Arquivar", "mail.archive"),
+                    ("reply", "Responder", "mail.reply"),
+                    ("replyAll", "Responder a todos", "mail.replyAll"),
+                    ("forward", "Encaminhar", "mail.forward"),
+                    ("toggleRead", "Não lido/Lido", "mail.toggleRead"),
+                    ("sync", "Enviar/Receber", "ui.sync"),
+                ];
+                for (icon, caption, command) in actions {
+                    let enabled = app.enabled(command);
+                    let is_new = command == "mail.new";
+                    let btn = egui::Button::new(egui::RichText::new(format!("     {caption}")).size(12.0)
+                        .color(if is_new { egui::Color32::WHITE } else { egui::Color32::from_rgb(40, 62, 91) }))
+                        .fill(if is_new { egui::Color32::from_rgb(5, 94, 191) } else { surface })
+                        .corner_radius(4.0)
+                        .min_size(vec2(0.0, 39.0));
+                    let response = ui.add_enabled(enabled, btn).on_hover_text(caption);
+                    let color = if !enabled { egui::Color32::GRAY } else if is_new {
+                        egui::Color32::WHITE
+                    } else { egui::Color32::from_rgb(40, 62, 91) };
+                    icons::paint(ui.painter(),
+                        Rect::from_center_size(pos2(response.rect.left() + 17.0, response.rect.center().y), vec2(18.0, 18.0)),
+                        icon, color, color);
+                    if response.clicked() {
+                        let _ = app.run(command, json!({}));
+                    }
+                }
+                // The mailbox search shares the same row as the action buttons.
+                // Keep a usable input width on compact windows and cap it on wide ones.
+                let available = ui.available_width();
+                if available >= 150.0 {
+                    ui.add_space(8.0);
+                    let width = ui.available_width().min(340.0);
+                    let (rect, _) = ui.allocate_exact_size(vec2(width, 35.0), Sense::hover());
+                    search_box(app, ui, rect);
+                }
+            });
+        });
+}
+
+/// Narrow, centered support strip beneath the ribbon.
+pub fn sorriso_service_strip(_app: &mut MailApp, ui: &mut Ui) {
+    egui::Panel::top("sorriso_service_strip")
+        .exact_size(36.0)
+        .show_separator_line(true)
+        .frame(egui::Frame::NONE.fill(egui::Color32::from_rgb(224, 239, 251))
+            .inner_margin(egui::Margin::symmetric(12, 5)))
+        .show(ui, |ui| {
+            ui.with_layout(egui::Layout::centered_and_justified(egui::Direction::LeftToRight), |ui| {
+                ui.horizontal_centered(|ui| {
+                    ui.label(egui::RichText::new("SorrisoServer Mail").strong()
+                        .color(egui::Color32::from_rgb(5, 87, 164)));
+                    ui.separator();
+                    ui.label("Suporte técnico e atendimento");
+                    if ui.link("WhatsApp: (66) 99685-7219").clicked() {
+                        ui.ctx().open_url(egui::OpenUrl::new_tab("https://wa.me/5566996857219"));
+                    }
+                    ui.separator();
+                    ui.label("Atualizações  •  Planos e upgrades");
+                });
+            });
         });
 }
 
@@ -259,7 +422,7 @@ pub(crate) fn sync_shown(app: &MailApp) -> SyncShown {
             match progress.current().and_then(|r| app.session.mailbox.account(r.account)) {
                 Some(account) => {
                     let name: String = account.name.chars().filter(|c| !c.is_control()).take(32).collect();
-                    crate::i18n::fmt(tl!("Updating {account}"), &[("account", name.trim())])
+                    format!("Atualizando {}", name.trim())
                 }
                 None => tl!("Send/Receive").to_string(),
             }
@@ -268,6 +431,35 @@ pub(crate) fn sync_shown(app: &MailApp) -> SyncShown {
     }
     let sync = &app.session.sync_status;
     if sync.is_empty() { SyncShown::Nothing } else { SyncShown::Text(sync.clone()) }
+}
+
+fn status_pt(message: &str) -> String {
+    if message.starts_with("Up to date") {
+        return message.replacen("Up to date", "Atualizado", 1);
+    }
+    if message.contains("Couldn't check for new mail") && message.contains("name couldn't be looked up") {
+        return "Não foi possível verificar novos e-mails: servidor não encontrado (DNS).".into();
+    }
+    if message.contains("Couldn't check for new mail") {
+        return message.replace("Couldn't check for new mail", "Não foi possível verificar novos e-mails");
+    }
+    message.to_string()
+}
+
+/// Persistent offline warning, independent of temporary status messages.
+pub fn offline_notice(app: &MailApp, ui: &mut Ui) {
+    if !app.ui.offline { return; }
+    egui::Panel::top("sorriso_offline_notice")
+        .exact_size(34.0)
+        .show_separator_line(false)
+        .frame(egui::Frame::NONE.fill(egui::Color32::from_rgb(125, 39, 31))
+            .inner_margin(egui::Margin::symmetric(12, 4)))
+        .show(ui, |ui| {
+            ui.horizontal_centered(|ui| {
+                ui.label(egui::RichText::new("●  MODO OFFLINE — Sem sincronização de e-mails. Clique em Offline no banner para reconectar.")
+                    .size(13.0).strong().color(egui::Color32::WHITE));
+            });
+        });
 }
 
 /// The status bar, across the foot of the window.
@@ -282,6 +474,9 @@ pub fn status_bar(app: &mut MailApp, ui: &mut Ui) {
             let full_w = ui.available_width();
             ui.horizontal_centered(|ui| {
                 ui.spacing_mut().item_spacing = vec2(14.0, 0.0);
+                if app.ui.offline {
+                    ui.label(egui::RichText::new("● OFFLINE").size(11.0).strong().color(egui::Color32::from_rgb(190, 40, 35)));
+                }
                 // One line of text, no wider than `most` or the room there is: what doesn't fit
                 // ends in an ellipsis, and the whole of it is shown under the pointer.
                 let st_most = |ui: &mut Ui, s: &str, color: egui::Color32, most: f32| {
@@ -297,10 +492,10 @@ pub fn status_bar(app: &mut MailApp, ui: &mut Ui) {
                     Module::Mail => {
                         let shown = app.session.rows().len();
                         let folder = app.session.view.folder;
-                        st(ui, &tln!(shown, "{n} item", "{n} items"), t.text_dim);
+                        st(ui, &format!("{shown} itens"), t.text_dim);
                         let unread = app.session.mailbox.unread_count(folder);
                         if unread > 0 {
-                            st(ui, &crate::i18n::fmt(tl!("Unread: {n}"), &[("n", &unread.to_string())]), t.text_dim);
+                            st(ui, &format!("Não lidas: {unread}"), t.text_dim);
                         }
                         let picked = app.session.sel.messages.len();
                         if picked > 1 {
@@ -355,7 +550,7 @@ pub fn status_bar(app: &mut MailApp, ui: &mut Ui) {
                     // The last Send/Receive had problems: one click shows them, in Send/Receive
                     // Progress under their accounts.
                     if app.has_sync_problems() {
-                        let link = ui.link(egui::RichText::new(tl!("Send/Receive problems")).size(STATUS_TEXT).color(t.red));
+                        let link = ui.link(egui::RichText::new("Problemas no envio/recebimento").size(STATUS_TEXT).color(t.red));
                         app.hit.add("syncProblemsLink", 0, link.rect);
                         if link.clicked() {
                             let _ = app.run("ui.dialog", json!({"name": "syncProblems"}));
@@ -381,7 +576,7 @@ pub fn status_bar(app: &mut MailApp, ui: &mut Ui) {
                         // What Send/Receive is doing, or did: a click shows it account by account.
                         let shown = match &shown_sync {
                             SyncShown::Bar { label, fraction } => sync_bar(app, ui, &t, label, *fraction),
-                            SyncShown::Text(said) => st(ui, said, t.text_dim),
+                            SyncShown::Text(said) => st(ui, &status_pt(said), t.text_dim),
                             SyncShown::Nothing => ui.allocate_exact_size(vec2(0.0, 0.0), Sense::hover()).1,
                         };
                         let shown = shown.interact(Sense::click()).on_hover_cursor(egui::CursorIcon::PointingHand);
@@ -392,9 +587,9 @@ pub fn status_bar(app: &mut MailApp, ui: &mut Ui) {
                         // Under the pointer, the run's own words say where it is.
                         let tip = match &shown_sync {
                             SyncShown::Bar { .. } if !app.session.sync_status.is_empty() => {
-                                format!("{}\n{}", app.session.sync_status, tl!("Show Send/Receive Progress"))
+                                format!("{}\n{}", status_pt(&app.session.sync_status), "Mostrar progresso de envio e recebimento")
                             }
-                            _ => tl!("Show Send/Receive Progress").to_string(),
+                            _ => "Mostrar progresso de envio e recebimento".to_string(),
                         };
                         if shown.on_hover_text(tip).clicked() {
                             if app.sync_panel.is_some() {

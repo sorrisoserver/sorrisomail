@@ -1,0 +1,1663 @@
+# Sorriso Server Mail — tradução inicial pt-BR.
+# Catálogo em expansão; entradas ausentes permanecem no idioma da base até revisão.
+msgid ""
+msgstr ""
+"Project-Id-Version: Sorriso Server Mail\n"
+"Language: pt-BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "MailCraft"
+msgstr "Sorriso Server Mail"
+
+msgid "Inbox"
+msgstr "Caixa de Entrada"
+
+msgid "Sent Items"
+msgstr "Itens Enviados"
+
+msgid "Drafts"
+msgstr "Rascunhos"
+
+msgid "Deleted Items"
+msgstr "Itens Excluídos"
+
+msgid "Junk Email"
+msgstr "Lixo Eletrônico"
+
+msgid "Archive"
+msgstr "Arquivar"
+
+msgid "New Mail"
+msgstr "Novo E-mail"
+
+msgid "Reply"
+msgstr "Responder"
+
+msgid "Reply All"
+msgstr "Responder a todos"
+
+msgid "Forward"
+msgstr "Encaminhar"
+
+msgid "Send"
+msgstr "Enviar"
+
+msgid "Receive"
+msgstr "Receber"
+
+msgid "Search"
+msgstr "Pesquisar"
+
+msgid "File"
+msgstr "Arquivo"
+
+msgid "Home"
+msgstr "Início"
+
+msgid "View"
+msgstr "Exibir"
+
+msgid "Folder"
+msgstr "Pasta"
+
+msgid "Calendar"
+msgstr "Calendário"
+
+msgid "People"
+msgstr "Pessoas"
+
+msgid "Tasks"
+msgstr "Tarefas"
+
+msgid "Options"
+msgstr "Opções"
+
+msgid "Settings"
+msgstr "Configurações"
+
+msgid "Accounts"
+msgstr "Contas"
+
+msgid "Add Account"
+msgstr "Adicionar conta"
+
+msgid "Save"
+msgstr "Salvar"
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Delete"
+msgstr "Excluir"
+
+msgid "Close"
+msgstr "Fechar"
+
+msgid "About"
+msgstr "Sobre"
+
+msgid "Language"
+msgstr "Idioma"
+
+msgid "Mailbox"
+msgstr "Caixa postal"
+
+msgid "No messages"
+msgstr "Nenhuma mensagem"
+
+msgid "Subject"
+msgstr "Assunto"
+
+msgid "From"
+msgstr "De"
+
+msgid "To"
+msgstr "Para"
+
+msgid "Date"
+msgstr "Data"
+
+msgid "Attachments"
+msgstr "Anexos"
+
+msgid "Signature"
+msgstr "Assinatura"
+
+msgid "Print"
+msgstr "Imprimir"
+
+msgid "Help"
+msgstr "Ajuda"
+
+msgid "Refresh"
+msgstr "Atualizar"
+
+# Traduções adicionais dos textos da interface original
+msgid "About MailCraft"
+msgstr "Sobre o Sorriso Server Mail"
+
+msgid "Account Settings"
+msgstr "Configurações da conta"
+
+msgid "Actions"
+msgstr "Ações"
+
+msgid "Active"
+msgstr "Ativo"
+
+msgid "Add"
+msgstr "Adicionar"
+
+msgid "Add Calendar"
+msgstr "Adicionar Calendário"
+
+msgid "Add Rule"
+msgstr "Adicionar Regra"
+
+msgid "Add Sender"
+msgstr "Adicionar Remetente"
+
+msgid "Add Sender to Contacts"
+msgstr "Adicionar Remetente aos Contatos"
+
+msgid "Add Shared Mailbox"
+msgstr "Adicionar Caixa Postal Compartilhada"
+
+msgid "Add a task"
+msgstr "Adicionar uma tarefa"
+
+msgid "Add an account"
+msgstr "Adicionar uma conta"
+
+msgid "Add an account first"
+msgstr "Adicione uma conta primeiro"
+
+msgid "Add another account"
+msgstr "Adicionar outra conta"
+
+msgid "Add another e-mail address"
+msgstr "Adicionar outro endereço de e-mail"
+
+msgid "Add another phone number"
+msgstr "Adicionar outro telefone"
+
+msgid "Add to Contacts"
+msgstr "Adicionar aos Contatos"
+
+msgid "Add to Favorites"
+msgstr "Adicionar aos Favoritos"
+
+msgid "Add to Tasks"
+msgstr "Adicionar às Tarefas"
+
+msgid "Address"
+msgstr "Endereço"
+
+msgid "Advanced options"
+msgstr "Opções avançadas"
+
+msgid "After"
+msgstr "Depois"
+
+msgid "All"
+msgstr "Todos"
+
+msgid "All Attendees"
+msgstr "Todos os Participantes"
+
+msgid "All Categories"
+msgstr "Todas as Categorias"
+
+msgid "All Mailboxes"
+msgstr "Todas as Caixas Postais"
+
+msgid "All day"
+msgstr "O dia inteiro"
+
+msgid "Allow"
+msgstr "Permitir"
+
+msgid "Already in your contacts"
+msgstr "Já está nos seus contatos"
+
+msgid "Any other mail server"
+msgstr "Outro servidor de e-mail"
+
+msgid "Apply"
+msgstr "Aplicar"
+
+msgid "Appointment"
+msgstr "Compromisso"
+
+msgid "Appointment Recurrence"
+msgstr "Recorrência do Compromisso"
+
+msgid "Approval Needed"
+msgstr "Aprovação Necessária"
+
+msgid "Apr"
+msgstr "Abr"
+
+msgid "April"
+msgstr "Abril"
+
+msgid "Arrange"
+msgstr "Organizar"
+
+msgid "Arrange By"
+msgstr "Organizar por"
+
+msgid "As recipients see it"
+msgstr "Como os destinatários visualizam"
+
+msgid "Attach"
+msgstr "Anexar"
+
+msgid "Attach File"
+msgstr "Anexar arquivo"
+
+msgid "Attendees"
+msgstr "Participantes"
+
+msgid "Aug"
+msgstr "Ago"
+
+msgid "August"
+msgstr "Agosto"
+
+msgid "Automatic"
+msgstr "Automático"
+
+msgid "Back"
+msgstr "Voltar"
+
+msgid "Basic Text"
+msgstr "Texto básico"
+
+msgid "Birthday"
+msgstr "Aniversário"
+
+msgid "Block Sender"
+msgstr "Bloquear Remetente"
+
+msgid "Bold"
+msgstr "Negrito"
+
+msgid "Busy"
+msgstr "Ocupado"
+
+msgid "By"
+msgstr "Por"
+
+msgid "By Date"
+msgstr "Por Data"
+
+msgid "By From"
+msgstr "Por Remetente"
+
+msgid "By Importance"
+msgstr "Por Importância"
+
+msgid "By Size"
+msgstr "Por Tamanho"
+
+msgid "By Subject"
+msgstr "Por Assunto"
+
+msgid "Calendar Changes to Send"
+msgstr "Alterações do Calendário para Enviar"
+
+msgid "Calendar Colour"
+msgstr "Cor do Calendário"
+
+msgid "Calendar and contacts"
+msgstr "Calendário e contatos"
+
+msgid "Cancel Invitation"
+msgstr "Cancelar Convite"
+
+msgid "Cancel Meeting"
+msgstr "Cancelar Reunião"
+
+msgid "Cancel Send/Receive"
+msgstr "Cancelar Envio/Recebimento"
+
+msgid "Cancel Sign-In"
+msgstr "Cancelar Entrada"
+
+msgid "Cancelled"
+msgstr "Cancelado"
+
+msgid "Categories"
+msgstr "Categorias"
+
+msgid "Categorize"
+msgstr "Categorizar"
+
+msgid "Change account settings"
+msgstr "Alterar configurações da conta"
+
+msgid "Change the colour"
+msgstr "Alterar a cor"
+
+msgid "Check Names"
+msgstr "Verificar nomes"
+
+msgid "Check Now"
+msgstr "Verificar Agora"
+
+msgid "Check for Updates"
+msgstr "Verificar Atualizações"
+
+msgid "Check for New Versions"
+msgstr "Verificar Novas Versões"
+
+msgid "Check for new versions"
+msgstr "Verificar novas versões"
+
+msgid "Copy"
+msgstr "Copiar"
+
+msgid "Copy to Folder"
+msgstr "Copiar para Pasta"
+
+msgid "Cut"
+msgstr "Recortar"
+
+msgid "Day"
+msgstr "Dia"
+
+msgid "Dec"
+msgstr "Dez"
+
+msgid "December"
+msgstr "Dezembro"
+
+msgid "Default"
+msgstr "Padrão"
+
+msgid "Details"
+msgstr "Detalhes"
+
+msgid "Done"
+msgstr "Concluído"
+
+msgid "Edit"
+msgstr "Editar"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "E-mail"
+msgstr "E-mail"
+
+msgid "Empty Folder"
+msgstr "Esvaziar pasta"
+
+msgid "Export"
+msgstr "Exportar"
+
+msgid "Favorites"
+msgstr "Favoritos"
+
+msgid "Feb"
+msgstr "Fev"
+
+msgid "February"
+msgstr "Fevereiro"
+
+msgid "Find"
+msgstr "Localizar"
+
+msgid "Font"
+msgstr "Fonte"
+
+msgid "Friday"
+msgstr "Sexta-feira"
+
+msgid "General"
+msgstr "Geral"
+
+msgid "High"
+msgstr "Alta"
+
+msgid "Import"
+msgstr "Importar"
+
+msgid "Jan"
+msgstr "Jan"
+
+msgid "January"
+msgstr "Janeiro"
+
+msgid "Jul"
+msgstr "Jul"
+
+msgid "July"
+msgstr "Julho"
+
+msgid "Jun"
+msgstr "Jun"
+
+msgid "June"
+msgstr "Junho"
+
+msgid "Low"
+msgstr "Baixa"
+
+msgid "Mail"
+msgstr "E-mail"
+
+msgid "Mark as Read"
+msgstr "Marcar como Lida"
+
+msgid "Mark as Unread"
+msgstr "Marcar como Não Lida"
+
+msgid "Mar"
+msgstr "Mar"
+
+msgid "March"
+msgstr "Março"
+
+msgid "May"
+msgstr "Maio"
+
+msgid "Meeting"
+msgstr "Reunião"
+
+msgid "Message"
+msgstr "Mensagem"
+
+msgid "Messages"
+msgstr "Mensagens"
+
+msgid "Monday"
+msgstr "Segunda-feira"
+
+msgid "Month"
+msgstr "Mês"
+
+msgid "Move"
+msgstr "Mover"
+
+msgid "Move to Folder"
+msgstr "Mover para Pasta"
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "New"
+msgstr "Novo"
+
+msgid "New Appointment"
+msgstr "Novo compromisso"
+
+msgid "New Contact"
+msgstr "Novo contato"
+
+msgid "New Folder"
+msgstr "Nova pasta"
+
+msgid "New Meeting"
+msgstr "Nova reunião"
+
+msgid "New Task"
+msgstr "Nova tarefa"
+
+msgid "No"
+msgstr "Não"
+
+msgid "None"
+msgstr "Nenhum"
+
+msgid "Normal"
+msgstr "Normal"
+
+msgid "Notes"
+msgstr "Anotações"
+
+msgid "Nov"
+msgstr "Nov"
+
+msgid "November"
+msgstr "Novembro"
+
+msgid "Oct"
+msgstr "Out"
+
+msgid "October"
+msgstr "Outubro"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Open"
+msgstr "Abrir"
+
+msgid "Other"
+msgstr "Outro"
+
+msgid "Password"
+msgstr "Senha"
+
+msgid "Paste"
+msgstr "Colar"
+
+msgid "Redo"
+msgstr "Refazer"
+
+msgid "Remove"
+msgstr "Remover"
+
+msgid "Rename"
+msgstr "Renomear"
+
+msgid "Required"
+msgstr "Obrigatório"
+
+msgid "Saturday"
+msgstr "Sábado"
+
+msgid "Select All"
+msgstr "Selecionar Tudo"
+
+msgid "Send/Receive"
+msgstr "Enviar/Receber"
+
+msgid "Sep"
+msgstr "Set"
+
+msgid "September"
+msgstr "Setembro"
+
+msgid "Sign In"
+msgstr "Entrar"
+
+msgid "Size"
+msgstr "Tamanho"
+
+msgid "Start"
+msgstr "Iniciar"
+
+msgid "Stop"
+msgstr "Parar"
+
+msgid "Sunday"
+msgstr "Domingo"
+
+msgid "Thursday"
+msgstr "Quinta-feira"
+
+msgid "Time"
+msgstr "Hora"
+
+msgid "Today"
+msgstr "Hoje"
+
+msgid "Tomorrow"
+msgstr "Amanhã"
+
+msgid "Tuesday"
+msgstr "Terça-feira"
+
+msgid "Type"
+msgstr "Tipo"
+
+msgid "Undo"
+msgstr "Desfazer"
+
+msgid "Unread"
+msgstr "Não Lidas"
+
+msgid "Username"
+msgstr "Nome de usuário"
+
+msgid "Wednesday"
+msgstr "Quarta-feira"
+
+msgid "Week"
+msgstr "Semana"
+
+msgid "Yesterday"
+msgstr "Ontem"
+
+msgid "Yes"
+msgstr "Sim"
+
+msgid "New Email"
+msgstr "Novo e-mail"
+
+msgid "Search mail"
+msgstr "Pesquisar e-mails"
+
+msgid "Search mail (try from:, has:attachment, is:unread)"
+msgstr "Pesquisar e-mails (ex.: from:, has:attachment, is:unread)"
+
+msgid "Search commands"
+msgstr "Pesquisar comandos"
+
+msgid "Copy Diagnostics"
+msgstr "Copiar diagnóstico"
+
+msgid "Send / Receive"
+msgstr "Enviar / Receber"
+
+msgid "Send/Receive All Folders"
+msgstr "Enviar/receber todas as pastas"
+
+msgid "Unread/Read"
+msgstr "Não lida/Lida"
+
+msgid "Filter Email"
+msgstr "Filtrar e-mails"
+
+msgid "Rules"
+msgstr "Regras"
+
+msgid "Pin"
+msgstr "Fixar"
+
+msgid "Related"
+msgstr "Relacionados"
+
+msgid "Current Folder"
+msgstr "Pasta Atual"
+
+msgid "Nothing here yet."
+msgstr "Ainda não há mensagens."
+
+msgid "Select an item to read"
+msgstr "Selecione um item para ler"
+
+msgid "Outbox"
+msgstr "Caixa de Saída"
+
+msgid "All Folders"
+msgstr "Todas as Pastas"
+
+msgctxt "folder"
+msgid "Inbox"
+msgstr "Caixa de Entrada"
+
+msgctxt "folder"
+msgid "Drafts"
+msgstr "Rascunhos"
+
+msgctxt "folder"
+msgid "Sent Items"
+msgstr "Itens Enviados"
+
+msgctxt "folder"
+msgid "Deleted Items"
+msgstr "Itens Excluídos"
+
+msgctxt "folder"
+msgid "Archive"
+msgstr "Arquivo"
+
+msgctxt "folder"
+msgid "Junk Email"
+msgstr "Lixo Eletrônico"
+
+msgctxt "folder"
+msgid "Outbox"
+msgstr "Caixa de Saída"
+
+msgctxt "folder"
+msgid "Imported"
+msgstr "Importados"
+
+msgid "Local mailbox"
+msgstr "Caixa postal local"
+
+msgid "On this device only: no mail server"
+msgstr "Somente neste dispositivo: sem servidor de e-mail"
+
+msgid "Open & Export"
+msgstr "Abrir e Exportar"
+
+msgid "Signatures"
+msgstr "Assinaturas"
+
+msgid "Rules and Categories"
+msgstr "Regras e Categorias"
+
+msgid "Manage Rules"
+msgstr "Gerenciar Regras"
+
+msgid "What happens to mail as it arrives"
+msgstr "Defina o que fazer com os e-mails recebidos"
+
+msgid "Names and colours for sorting mail, events, people and tasks"
+msgstr "Nomes e cores para organizar e-mails, eventos, contatos e tarefas"
+
+msgid "Type your e-mail address and MailCraft finds the rest: Microsoft 365, Outlook.com, Google and other providers, or a mailbox on this device only"
+msgstr "Digite seu endereço de e-mail. O Sorriso Server Mail identifica as configurações para Microsoft 365, Outlook.com, Google e outros provedores, ou utiliza uma caixa postal local."
+
+msgid "Type your address. MailCraft finds your mail servers and how you sign in."
+msgstr "Digite seu e-mail. O Sorriso Server Mail identifica os servidores e o método de autenticação."
+
+msgid "Email address"
+msgstr "Endereço de e-mail"
+
+msgid "Connect"
+msgstr "Conectar"
+
+msgid "No account is connected to a mail server yet."
+msgstr "Nenhuma conta está conectada a um servidor de e-mail."
+
+msgid "Show Progress"
+msgstr "Mostrar progresso"
+
+msgid "Rename Folder"
+msgstr "Renomear pasta"
+
+msgid "Move Folder"
+msgstr "Mover pasta"
+
+msgid "Delete Folder"
+msgstr "Excluir pasta"
+
+msgid "Mark All as Read"
+msgstr "Marcar todas como lidas"
+
+msgid "Run Rules Now"
+msgstr "Executar regras agora"
+
+msgid "Remove from Favorites"
+msgstr "Remover dos favoritos"
+
+msgid "Export Folder"
+msgstr "Exportar pasta"
+
+msgid "Folder Pane"
+msgstr "Painel de pastas"
+
+msgid "Reading Pane"
+msgstr "Painel de leitura"
+
+msgid "Show as Conversations"
+msgstr "Mostrar como conversas"
+
+msgid "Message Preview"
+msgstr "Prévia da mensagem"
+
+msgid "Reverse Sort"
+msgstr "Inverter ordenação"
+
+msgid "Ribbon Layout"
+msgstr "Layout da faixa de opções"
+
+msgid "Theme"
+msgstr "Tema"
+
+msgid "Reminders Window"
+msgstr "Janela de lembretes"
+
+msgid "Reset View"
+msgstr "Redefinir exibição"
+
+msgid "Info"
+msgstr "Informações"
+
+msgid "Type your e-mail address"
+msgstr "Digite seu endereço de e-mail"
+
+msgid "No rules yet. A rule files, flags or deletes mail as it arrives."
+msgstr "Nenhuma regra cadastrada. As regras organizam, sinalizam ou excluem e-mails recebidos."
+
+msgid "New rule"
+msgstr "Nova regra"
+
+msgid "When"
+msgstr "Quando"
+
+msgid "Do"
+msgstr "Fazer"
+
+msgid "From contains"
+msgstr "Remetente contém"
+
+msgid "Text to look for"
+msgstr "Texto a pesquisar"
+
+msgid "+ condition"
+msgstr "+ condição"
+
+msgid "+ action"
+msgstr "+ ação"
+
+msgid "Move to folder"
+msgstr "Mover para pasta"
+
+msgid "Stop processing more rules"
+msgstr "Parar de processar outras regras"
+
+msgid "A rule needs a name, and something to look for."
+msgstr "A regra precisa de um nome e de uma condição."
+
+msgid "Let me set up my account manually"
+msgstr "Quero configurar minha conta manualmente"
+
+msgid "Your name"
+msgstr "Seu nome"
+
+msgid "As the people you write to see it"
+msgstr "Como será exibido aos destinatários"
+
+msgid "Interface theme"
+msgstr "Tema da interface"
+
+msgid "Interface size"
+msgstr "Tamanho da interface"
+
+msgid "Use system setting"
+msgstr "Usar configuração do sistema"
+
+msgid "Mark a message as read when it is opened in the reading pane"
+msgstr "Marcar mensagem como lida quando aberta no painel de leitura"
+
+msgid "Include the original message when replying"
+msgstr "Incluir a mensagem original na resposta"
+
+msgid "Preview lines in the message list"
+msgstr "Linhas de pré-visualização na lista"
+
+msgid "Messages to download per folder"
+msgstr "Mensagens para baixar por pasta"
+
+msgid "Desktop alerts"
+msgstr "Notificações na área de trabalho"
+
+msgid "Show a desktop alert when new mail arrives"
+msgstr "Mostrar notificação quando chegar um novo e-mail"
+
+msgid "Show a desktop alert for reminders"
+msgstr "Mostrar notificações de lembretes"
+
+msgid "Pictures in mail"
+msgstr "Imagens nas mensagens"
+
+msgid "Download pictures in mail automatically"
+msgstr "Baixar imagens dos e-mails automaticamente"
+
+msgid "Remember passwords and sign-ins on this computer"
+msgstr "Lembrar senhas e logins neste computador"
+
+msgid "Microsoft application ID"
+msgstr "ID do aplicativo Microsoft"
+
+msgid "Send and receive automatically"
+msgstr "Enviar e receber automaticamente"
+
+msgid "Use a 12-hour clock (3:05 PM)"
+msgstr "Usar relógio de 12 horas (3:05 PM)"
+
+msgid "Week starts on"
+msgstr "A semana começa em"
+
+msgid "Working hours"
+msgstr "Horário de trabalho"
+
+msgid "Use my own working hours"
+msgstr "Usar meu horário de trabalho"
+
+msgid "Reminder for new appointments"
+msgstr "Lembrete para novos compromissos"
+
+msgid "Time scale"
+msgstr "Intervalo de tempo"
+
+msgid "Bring in"
+msgstr "Importar"
+
+msgid "Save out"
+msgstr "Exportar"
+
+msgid "Start over"
+msgstr "Recomeçar"
+
+msgid "Open Mailbox File"
+msgstr "Abrir Arquivo da Caixa Postal"
+
+msgid "Save Mailbox As"
+msgstr "Salvar Caixa Postal Como"
+
+msgid "Save Calendar"
+msgstr "Salvar calendário"
+
+msgid "Export Contacts"
+msgstr "Exportar contatos"
+
+msgid "Sample Mailbox"
+msgstr "Caixa Postal de Exemplo"
+
+msgid "Empty Mailbox"
+msgstr "Esvaziar Caixa Postal"
+
+msgid "Choose default signatures"
+msgstr "Escolher assinaturas padrão"
+
+msgid "Create from details"
+msgstr "Criar com os dados"
+
+msgid "Make the signature from these details"
+msgstr "Criar assinatura com esses dados"
+
+msgid "Job title"
+msgstr "Cargo"
+
+msgid "Organisation"
+msgstr "Organização"
+
+msgid "Mobile"
+msgstr "Celular"
+
+msgid "Website"
+msgstr "Site"
+
+msgid "Preview"
+msgstr "Pré-visualização"
+
+msgid "New messages"
+msgstr "Novas mensagens"
+
+msgid "Replies and forwards"
+msgstr "Respostas e encaminhamentos"
+
+msgid "Insert Picture"
+msgstr "Inserir Imagem"
+
+msgid "Paste Picture"
+msgstr "Colar Imagem"
+
+msgid "In line with text"
+msgstr "Alinhada ao texto"
+
+msgid "Colour"
+msgstr "Cor"
+
+msgid "Link"
+msgstr "Link"
+
+msgid "Pictures: {n} KB of {max} KB"
+msgstr "Imagens: {n} KB de {max} KB"
+
+msgid "Contributors"
+msgstr "Colaboradores"
+
+msgid "Show Contributors"
+msgstr "Mostrar colaboradores"
+
+msgid "What it is made of"
+msgstr "Tecnologias utilizadas"
+
+msgid "Your mail stays yours"
+msgstr "Seus e-mails pertencem a você"
+
+msgid "Scripts and agents"
+msgstr "Scripts e agentes"
+
+msgid "Search Commands"
+msgstr "Pesquisar comandos"
+
+msgid "No rules yet."
+msgstr "Nenhuma regra cadastrada."
+
+msgid "Choose the kind of account"
+msgstr "Escolha o tipo de conta"
+
+msgid "Work or school mail"
+msgstr "E-mail corporativo ou escolar"
+
+msgid "Also Hotmail, Live and MSN"
+msgstr "Também Hotmail, Live e MSN"
+
+msgid "Gmail and Google Workspace"
+msgstr "Gmail e Google Workspace"
+
+msgid "Yahoo Mail"
+msgstr "E-mail Yahoo"
+
+msgid "Other (IMAP)"
+msgstr "Outro (IMAP)"
+
+msgid "Other mail server"
+msgstr "Outro servidor de e-mail"
+
+msgid "This device only"
+msgstr "Somente neste dispositivo"
+
+msgid "A mailbox kept here, with no mail server"
+msgstr "Caixa postal armazenada aqui, sem servidor de e-mail"
+
+msgid "Not kept anywhere yet: use Open & Export › Save Mailbox As."
+msgstr "Ainda não foi salva. Use Abrir e Exportar › Salvar Caixa Postal Como."
+
+msgid "Kept in {path}, saved as you go."
+msgstr "Armazenada em {path}, com salvamento automático."
+
+msgid "Messages (.eml, .mbox), calendars (.ics) and contacts (.vcf)"
+msgstr "Mensagens (.eml, .mbox), calendários (.ics) e contatos (.vcf)"
+
+msgid "Replace what is open with a .mailcraft file"
+msgstr "Substituir a caixa aberta por um arquivo .mailcraft"
+
+msgid "Everything here in one .mailcraft file"
+msgstr "Salvar todos os dados em um arquivo .mailcraft"
+
+msgid "The messages of the folder in view, as .mbox"
+msgstr "Mensagens da pasta atual em formato .mbox"
+
+msgid "Every event and task, as .ics"
+msgstr "Todos os eventos e tarefas em formato .ics"
+
+msgid "Every contact, as .vcf"
+msgstr "Todos os contatos em formato .vcf"
+
+msgid "Invented mail, meetings, people and tasks to try things on"
+msgstr "E-mails, reuniões, contatos e tarefas fictícios para testes"
+
+msgid "Nothing in it: replaces what is open here"
+msgstr "Caixa vazia: substitui a caixa postal aberta"
+
+msgid "Bookshop newsletters"
+msgstr "Boletins da livraria"
+
+msgid "Red category"
+msgstr "Categoria vermelha"
+
+msgid "Orange category"
+msgstr "Categoria laranja"
+
+msgid "Yellow category"
+msgstr "Categoria amarela"
+
+msgid "Green category"
+msgstr "Categoria verde"
+
+msgid "Blue category"
+msgstr "Categoria azul"
+
+msgid "Purple category"
+msgstr "Categoria roxa"
+
+msgid "New category"
+msgstr "Nova categoria"
+
+msgid "Set importance"
+msgstr "Definir importância"
+
+msgid "Flag"
+msgstr "Sinalizar"
+
+msgid "Mark as read"
+msgstr "Marcar como lida"
+
+msgid "Send / Receive All Folders"
+msgstr "Enviar/receber todas as pastas"
+
+msgid "MailCraft is open source (MIT or Apache-2.0). Every button here runs a command that scripts and agents can run too; see Search Commands."
+msgstr "O Sorriso Server Mail é baseado em software de código aberto (MIT ou Apache-2.0). Os botões também executam comandos acessíveis por scripts e agentes; consulte Pesquisar comandos."
+
+msgid "Desktop alerts can't be shown: this copy of MailCraft wasn't installed with its installer (.msi), so Windows doesn't know it."
+msgstr "As notificações não estão disponíveis porque esta versão de teste do Sorriso Server Mail não foi instalada pelo instalador (.msi) do Windows."
+
+msgid "No senders are remembered. \"Always download pictures from\" above a message adds its sender or its sender's domain here."
+msgstr "Nenhum remetente foi salvo. A opção de sempre baixar imagens de um remetente adiciona seu endereço ou domínio aqui."
+
+msgid "No downloaded pictures are kept on this computer."
+msgstr "Nenhuma imagem baixada está armazenada neste computador."
+
+msgid "The one this build came with"
+msgstr "A identificação incluída nesta versão"
+
+msgid "Every 5 minutes"
+msgstr "A cada 5 minutos"
+
+msgid "Show week numbers in the Month view and the date navigator"
+msgstr "Mostrar números das semanas na exibição mensal e no calendário"
+
+msgid "Delete meeting requests from the Inbox after responding"
+msgstr "Excluir convites de reunião da Caixa de Entrada após responder"
+
+msgid "Time zone"
+msgstr "Fuso horário"
+
+msgid "Second time zone"
+msgstr "Segundo fuso horário"
+
+msgid "Show in the time bar"
+msgstr "Mostrar na barra de horários"
+
+msgid "This computer's, wherever it goes"
+msgstr "Usar o fuso horário deste computador"
+
+msgid "In a plain-text message"
+msgstr "Em uma mensagem de texto simples"
+
+msgid "The logo is the signature's first picture: add one with Insert Picture."
+msgstr "O logotipo é a primeira imagem da assinatura: adicione-o usando Inserir Imagem."
+
+msgid "Phone"
+msgstr "Telefone"
+
+msgid "Signatures are kept on this computer. They can't be kept in step with Outlook: on another device set them up there, or paste one from Outlook on the web (Settings › Signatures)."
+msgstr "As assinaturas ficam armazenadas neste computador e não são sincronizadas com o Outlook. Em outro dispositivo, configure-as novamente ou copie-as do Outlook na Web (Configurações › Assinaturas)."
+
+msgid "Choose Default Signature"
+msgstr "Escolher assinatura padrão"
+
+msgid "Add a mail server account in File › Add Account to send and receive."
+msgstr "Adicione uma conta de servidor em Arquivo › Adicionar Conta para enviar e receber."
+
+msgid "User name"
+msgstr "Nome de usuário"
+
+msgid "Leave empty to keep the one in use"
+msgstr "Deixe em branco para manter a senha atual"
+
+msgid "Usually the whole address"
+msgstr "Normalmente o endereço de e-mail completo"
+
+msgid "Incoming mail (IMAP)"
+msgstr "Servidor de entrada (IMAP)"
+
+msgid "Outgoing mail (SMTP)"
+msgstr "Servidor de saída (SMTP)"
+
+msgid "Pinned"
+msgstr "Fixadas"
+
+msgid "Unpinned"
+msgstr "Não fixadas"
+
+msgid "Sign in to your account"
+msgstr "Entre na sua conta"
+
+msgid "Once it has worked, your system's credential store keeps it for next time. It is never written to the mailbox."
+msgstr "Após a primeira conexão, o armazenamento seguro de credenciais do sistema guarda a senha para os próximos acessos. Ela nunca é gravada na caixa postal."
+
+msgid "New\nEmail"
+msgstr "Novo\ne-mail"
+
+msgid "Reply\nAll"
+msgstr "Responder\na todos"
+
+msgid "Unread/\nRead"
+msgstr "Não lida/\nLida"
+
+msgid "Filter\nEmail"
+msgstr "Filtrar\ne-mails"
+
+msgid "Send/Receive\nAll Folders"
+msgstr "Enviar/receber\ntodas as pastas"
+
+msgid "MailCraft is open source (MIT or Apache-2.0). Every button here runs a command that scripts and agents can run too: see Search Commands."
+msgstr "O Sorriso Server Mail utiliza componentes de código aberto (MIT ou Apache-2.0). Os botões também executam comandos disponíveis para scripts e agentes; consulte Pesquisar comandos."
+
+msgid "Mail, calendar, people and tasks, written from scratch in Rust. It runs natively on macOS, Windows, Linux and BSD, and in the browser."
+msgstr "E-mails, calendário, contatos e tarefas em um aplicativo desenvolvido em Rust, disponível para Windows e outras plataformas."
+
+msgid "Open source under the MIT License or the Apache License 2.0, at your option."
+msgstr "Este aplicativo utiliza código aberto licenciado sob MIT ou Apache 2.0, conforme aplicável."
+
+msgid "Version {version}"
+msgstr "Versão {version}"
+
+msgid "Made by its contributors:"
+msgstr "Desenvolvido com contribuições de:"
+
+msgid "The interface fonts are Inter, Source Sans 3 and JetBrains Mono (SIL Open Font License 1.1). Every icon is drawn in code and is original work. No artwork, fonts or text from other mail programs are included."
+msgstr "As fontes da interface são Inter, Source Sans 3 e JetBrains Mono (licença SIL Open Font License 1.1). Os ícones são desenhados em código."
+
+msgid "Messages are shown without running anything in them, and the pictures a message keeps on the web are downloaded only when you ask. Passwords are kept in memory only while the app is open."
+msgstr "As mensagens são exibidas sem executar seu conteúdo. As imagens remotas são baixadas somente mediante autorização. As senhas permanecem na memória enquanto o aplicativo estiver aberto."
+
+msgid "Everything the interface does is a command: {commands} of them, covering {percent}% of the feature catalog. The command line, the control channel and the MCP server run the same commands."
+msgstr "A interface oferece {commands} comandos, correspondentes a {percent}% do catálogo de recursos. Linha de comando, canal de controle e servidor MCP usam os mesmos comandos."
+
+msgid "First name"
+msgstr "Nome"
+
+msgid "Last name"
+msgstr "Sobrenome"
+
+msgid "Display name"
+msgstr "Nome de exibição"
+
+msgid "Shown as First Last when empty"
+msgstr "Exibido como Nome Sobrenome se estiver vazio"
+
+msgid "Company"
+msgstr "Empresa"
+
+msgid "Department"
+msgstr "Departamento"
+
+msgid "Work"
+msgstr "Trabalho"
+
+msgid "Street"
+msgstr "Rua"
+
+msgid "City"
+msgstr "Cidade"
+
+msgid "State or region"
+msgstr "Estado ou região"
+
+msgid "Postal code"
+msgstr "CEP"
+
+msgid "Country"
+msgstr "País"
+
+msgid "Favorite"
+msgstr "Favorito"
+
+msgid "Edit Contact"
+msgstr "Editar contato"
+
+msgid "No contacts yet"
+msgstr "Ainda não há contatos"
+
+msgid "My Tasks"
+msgstr "Minhas tarefas"
+
+msgid "Overdue"
+msgstr "Atrasadas"
+
+msgid "Completed"
+msgstr "Concluídas"
+
+msgid "Nothing to do here."
+msgstr "Não há tarefas aqui."
+
+msgid "My Calendars"
+msgstr "Meus calendários"
+
+msgid "Manage Task"
+msgstr "Gerenciar tarefa"
+
+msgid "Next Week"
+msgstr "Próxima semana"
+
+msgid "No Date"
+msgstr "Sem data"
+
+msgid "High Importance"
+msgstr "Alta importância"
+
+msgid "Low Importance"
+msgstr "Baixa importância"
+
+msgid "Tags"
+msgstr "Etiquetas"
+
+msgid "Current View"
+msgstr "Exibição atual"
+
+msgid "Clean Up"
+msgstr "Limpeza"
+
+msgid "Not available: {reason}"
+msgstr "Indisponível: {reason}"
+
+msgid "the folder is already empty"
+msgstr "a pasta já está vazia"
+
+msgid "Share"
+msgstr "Compartilhar"
+
+msgid "Communicate"
+msgstr "Comunicação"
+
+msgid "Mark Complete"
+msgstr "Marcar como concluída"
+
+msgid "Edit Task"
+msgstr "Editar tarefa"
+
+msgid "Filter"
+msgstr "Filtrar"
+
+msgid "Follow Up"
+msgstr "Acompanhamento"
+
+msgid "No contacts yet."
+msgstr "Ainda não há contatos."
+
+msgid "No completed tasks yet."
+msgstr "Ainda não há tarefas concluídas."
+
+msgid "Write your signature"
+msgstr "Escreva sua assinatura"
+
+msgid "Thanks, Thursday at ten works for me. I'll bring the drawings."
+msgstr "Obrigado, quinta-feira às dez está ótimo. Levarei os documentos."
+
+msgid "select a task first"
+msgstr "selecione uma tarefa primeiro"
+
+msgid "Filter Tasks"
+msgstr "Filtrar tarefas"
+
+msgid "Send & Receive"
+msgstr "Enviar e receber"
+
+msgid "Right"
+msgstr "Direita"
+
+msgid "Bottom"
+msgstr "Inferior"
+
+msgid "Off"
+msgstr "Desativado"
+
+msgid "Classic Ribbon"
+msgstr "Faixa clássica"
+
+msgid "Simplified Ribbon"
+msgstr "Faixa simplificada"
+
+msgid "1 Line"
+msgstr "1 linha"
+
+msgid "2 Lines"
+msgstr "2 linhas"
+
+msgid "3 Lines"
+msgstr "3 linhas"
+
+msgid "Light"
+msgstr "Claro"
+
+msgid "Dark"
+msgstr "Escuro"
+
+msgid "Layout"
+msgstr "Layout"
+
+msgid "Arrangement"
+msgstr "Organização"
+
+msgid "Window"
+msgstr "Janela"
+
+msgid "Next 7 Days"
+msgstr "Próximos 7 dias"
+
+msgid "Go to Date"
+msgstr "Ir para a data"
+
+msgid "Work Week"
+msgstr "Semana de trabalho"
+
+msgid "Junk"
+msgstr "Lixo eletrônico"
+
+msgid "Delete for Good"
+msgstr "Excluir definitivamente"
+
+msgid "Select a message first"
+msgstr "Selecione uma mensagem primeiro"
+
+msgid "select a message first"
+msgstr "selecione uma mensagem primeiro"
+
+msgid "Manage Rules…"
+msgstr "Gerenciar regras…"
+
+msgid "All Categories…"
+msgstr "Todas as categorias…"
+
+msgid "Clear All Categories"
+msgstr "Limpar todas as categorias"
+
+msgid "Clear Flag"
+msgstr "Remover sinalização"
+
+msgid "This Week"
+msgstr "Esta semana"
+
+msgid "Email Message"
+msgstr "Mensagem de e-mail"
+
+msgid "Contact"
+msgstr "Contato"
+
+msgid "Task"
+msgstr "Tarefa"
+
+msgid "Folder…"
+msgstr "Pasta…"
+
+msgid "Flagged"
+msgstr "Sinalizadas"
+
+msgid "Has Attachments"
+msgstr "Com anexos"
+
+msgid "To Me"
+msgstr "Para mim"
+
+msgid "Respond"
+msgstr "Responder"
+
+msgid "Names or addresses, separated by ;"
+msgstr "Nomes ou endereços separados por ;"
+
+msgid "Optional"
+msgstr "Opcional"
+
+msgid "End"
+msgstr "Terminar"
+
+msgid "Location"
+msgstr "Local"
+
+msgid "Description"
+msgstr "Descrição"
+
+msgid "Title"
+msgstr "Título"
+
+msgid "Thu"
+msgstr "Qui"
+
+msgid "Insert"
+msgstr "Inserir"
+
+msgid "The folder is already empty"
+msgstr "A pasta já está vazia"
+
+msgid "Save & Close"
+msgstr "Salvar e fechar"
+
+msgid "Invite Attendees"
+msgstr "Convidar participantes"
+
+msgid "Tue"
+msgstr "Ter"
+
+msgid "Mon"
+msgstr "Seg"
+
+msgid "Wed"
+msgstr "Qua"
+
+msgid "Fri"
+msgstr "Sex"
+
+msgid "Sat"
+msgstr "Sáb"
+
+msgid "Sun"
+msgstr "Dom"
+
+msgid "Use YYYY-MM-DD"
+msgstr "Use DD/MM/AAAA"
+
+msgid "Organize"
+msgstr "Organizar"
+
+msgid "Go To"
+msgstr "Ir para"
+
+msgid "Font Size"
+msgstr "Tamanho da fonte"
+
+msgid "Font Color"
+msgstr "Cor da fonte"
+
+msgid "Italic"
+msgstr "Itálico"
+
+msgid "Underline"
+msgstr "Sublinhado"
+
+msgid "Bullets"
+msgstr "Marcadores"
+
+msgid "Numbering"
+msgstr "Numeração"
+
+msgid "Increase Indent"
+msgstr "Aumentar recuo"
+
+msgid "Decrease Indent"
+msgstr "Diminuir recuo"
+
+msgid "Clear Formatting"
+msgstr "Limpar formatação"
+
+msgid "Plain Text"
+msgstr "Texto simples"
+
+msgid "Format as Plain Text"
+msgstr "Formatar como texto simples"
+
+msgid "Save Draft"
+msgstr "Salvar rascunho"
+
+msgid "Save draft"
+msgstr "Salvar rascunho"
+
+msgid "Discard"
+msgstr "Descartar"
+
+msgid "New message"
+msgstr "Nova mensagem"
+
+msgid "Write your message"
+msgstr "Escreva sua mensagem"
+
+msgid "Insert Link"
+msgstr "Inserir link"
+
+msgid "A web address, an email address or a phone number (tel:). With nothing selected, the address is put in as it is."
+msgstr "Informe um endereço da Web, um e-mail ou um número de telefone (tel:). Se nenhum texto estiver selecionado, o endereço será inserido como informado."
+
+msgid "Signatures…"
+msgstr "Assinaturas…"
+
+msgid "Signatures..."
+msgstr "Assinaturas…"
+
+msgid "Names"
+msgstr "Nomes"
+
+msgid "Include"
+msgstr "Incluir"
+
+msgid "Format"
+msgstr "Formato"
+
+msgid "Draft"
+msgstr "Rascunho"
+
+msgid "HTML"
+msgstr "HTML"
+
+msgid "Discard draft"
+msgstr "Descartar rascunho"
+
+msgid "Pictures not downloaded."
+msgstr "Imagens não baixadas."
+
+msgid "They are on the web, and fetching them would tell the sender that you opened this message."
+msgstr "As imagens estão na internet; baixá-las pode informar ao remetente que você abriu esta mensagem."
+
+msgid "Download pictures"
+msgstr "Baixar imagens"
+
+msgid "Always download pictures from {sender}"
+msgstr "Sempre baixar imagens de {sender}"
+
+msgid "Double-click to open {name}; right-click to save it"
+msgstr "Clique duas vezes para abrir {name}; clique com o botão direito para salvar"
+
+msgid "{n} messages in this conversation:"
+msgstr "{n} mensagens nesta conversa:"
+
+msgid "{n} message in this conversation:"
+msgstr "{n} mensagem nesta conversa:"
+
+msgid "Checking the account…"
+msgstr "Verificando a conta…"
+
+msgid "Signing in to {server}"
+msgstr "Conectando ao servidor {server}"
+
+msgid "Your mail is downloading now. The first time can take a few minutes."
+msgstr "Seus e-mails estão sendo baixados. A primeira sincronização pode levar alguns minutos."
+
+msgid "{address} is set up"
+msgstr "A conta {address} foi configurada"
+
+msgid "Three Weeks Ago"
+msgstr "Há três semanas"
+
+msgid "Last Month"
+msgstr "Mês passado"
+
+msgid "Last Week"
+msgstr "Semana passada"
+
+msgid "Older"
+msgstr "Mais antigas"
+
+msgid "connection problem: the server took too long to answer"
+msgstr "Problema de conexão: o servidor demorou demais para responder"
+
+msgid "20 results in {scope}"
+msgstr "20 resultados em {scope}"
+
+msgid "{n} downloaded picture is kept on this computer ({size})."
+msgstr "{n} imagem baixada está armazenada neste computador ({size})."
+
+msgid "{n} downloaded pictures are kept on this computer ({size})."
+msgstr "{n} imagens baixadas estão armazenadas neste computador ({size})."
+
+msgid "Clear"
+msgstr "Limpar"
+
+msgid "Every {n} minutes"
+msgstr "A cada {n} minutos"
+
+msgid "Every minute"
+msgstr "A cada minuto"
+
+msgid "Only when I ask"
+msgstr "Somente manualmente"
+
+msgid "Reply all"
+msgstr "Responder a todos"
+
+msgid "Search emails (e.g. from:, has:attachment, is:unread)"
+msgstr "Pesquisar e-mails (ex.: from:, has:attachment, is:unread)"

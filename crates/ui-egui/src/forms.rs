@@ -382,13 +382,19 @@ pub(crate) mod kit {
         /// A date typed as `YYYY-MM-DD`, outlined in red while the text isn't a date. An empty
         /// field is wrong only when `required`.
         pub fn date_text(&mut self, ui: &mut Ui, key: impl Hash + Debug, text: &mut String, required: bool) -> Response {
+            // Date fields show DD/MM/AAAA in the Brazilian UI while retaining ISO
+            // internally for persistence and the command/API contracts.
+            let mut shown = local_date(text);
             let resp = ui.add(
-                egui::TextEdit::singleline(text)
+                egui::TextEdit::singleline(&mut shown)
                     .id(field_id(key))
-                    .desired_width(84.0)
+                    .desired_width(96.0)
                     .char_limit(10)
-                    .hint_text(egui::RichText::new(tl!("YYYY-MM-DD")).size(10.5)),
+                    .hint_text(egui::RichText::new("DD/MM/AAAA").size(10.5)),
             );
+            if resp.changed() {
+                *text = parse_br_date(&shown).map_or(shown, |d| d.iso());
+            }
             self.field(&resp);
             if !date_ok(text, required) {
                 mark_wrong(ui, &resp, &self.t);
@@ -471,23 +477,38 @@ pub(crate) mod kit {
         let t = Tokens::get(ui.ctx());
         match Date::parse_iso(text) {
             Some(d) => {
-                ui.label(egui::RichText::new(tl!(d.weekday().short())).color(t.text_dim));
+                ui.label(egui::RichText::new(crate::dates::weekday_short(d.weekday())).color(t.text_dim));
             }
             None => date_hint(ui, text, required),
         }
+    }
+
+    fn parse_br_date(text: &str) -> Option<Date> {
+        let mut parts = text.trim().split('/');
+        let day = parts.next()?.parse::<u8>().ok()?;
+        let month = parts.next()?.parse::<u8>().ok()?;
+        let year = parts.next()?.parse::<i32>().ok()?;
+        if parts.next().is_some() {
+            return None;
+        }
+        Date::new(year, month, day)
+    }
+
+    fn local_date(text: &str) -> String {
+        Date::parse_iso(text).map_or_else(|| text.to_owned(), |d| format!("{:02}/{:02}/{:04}", d.day, d.month, d.year))
     }
 
     /// How to write a date, in red, after a date field whose text isn't one.
     pub fn date_hint(ui: &mut Ui, text: &str, required: bool) {
         if !date_ok(text, required) {
             let t = Tokens::get(ui.ctx());
-            ui.label(egui::RichText::new(tl!("Use YYYY-MM-DD")).color(t.red));
+            ui.label(egui::RichText::new("Use DD/MM/AAAA").color(t.red));
         }
     }
 
     /// Whether a date field's text can be used: a date, or nothing where the field may stay empty.
     pub fn date_ok(text: &str, required: bool) -> bool {
-        if text.trim().is_empty() { !required } else { Date::parse_iso(text).is_some() }
+        if text.trim().is_empty() { !required } else { (Date::parse_iso(text).is_some() || parse_br_date(text).is_some()) }
     }
 
     /// Whether a time field's text can be used: a time, or nothing where the field may stay empty.
