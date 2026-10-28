@@ -261,16 +261,16 @@ pub fn sorriso_brand_banner(app: &mut MailApp, ui: &mut Ui) {
                 pos2(usable.left() + usable.width() * 0.66, usable.bottom()));
             let actions = egui::Rect::from_min_max(pos2(usable.left() + usable.width() * 0.67, usable.top()), usable.max);
             ui.scope_builder(egui::UiBuilder::new().max_rect(brand), |ui| {
-                ui.vertical_centered(|ui| {
-                    ui.add_space(3.0);
-                    ui.label(egui::RichText::new("SorrisoServer Mail").size(25.0).strong().color(egui::Color32::WHITE));
+                ui.vertical(|ui| {
+                    ui.add_space(5.0);
+                    ui.label(egui::RichText::new("SorrisoServer Mail").size(22.0).strong().color(egui::Color32::WHITE));
                         ui.label(egui::RichText::new("Sua Marca em cada Mensagem.").size(12.0)
                             .color(egui::Color32::from_rgb(217,239,255)));
                 });
             });
             ui.scope_builder(egui::UiBuilder::new().max_rect(support), |ui| {
                 ui.vertical_centered(|ui| {
-                    ui.add_space(0.0);
+                    ui.add_space(6.0);
                     ui.label(egui::RichText::new("Suporte técnico e atendimento especializado").size(12.0).strong()
                         .color(egui::Color32::from_rgb(206,235,255)));
                     if ui.link(egui::RichText::new("WhatsApp (66) 99685-7219").size(15.0).strong()
@@ -310,23 +310,12 @@ pub fn sorriso_brand_banner(app: &mut MailApp, ui: &mut Ui) {
 pub fn sorriso_compact_toolbar(app: &mut MailApp, ui: &mut Ui) {
     let surface = egui::Color32::from_rgb(249, 251, 254);
     egui::Panel::top("sorriso_compact_toolbar")
-        .exact_size(94.0)
+        .exact_size(52.0)
         .show_separator_line(true)
         .frame(egui::Frame::NONE.fill(surface).inner_margin(egui::Margin::symmetric(12, 5)))
         .show(ui, |ui| {
-            // Search occupies its own top band and stays discoverable on narrow windows.
-            ui.horizontal(|ui| {
-                ui.label(egui::RichText::new("Pesquisar mensagens").size(12.0).strong()
-                    .color(egui::Color32::from_rgb(57, 76, 105)));
-                ui.add_space(12.0);
-                let w = ui.available_width().min(620.0).max(180.0);
-                let (rect, _) = ui.allocate_exact_size(vec2(w, 30.0), Sense::hover());
-                search_box(app, ui, rect);
-            });
-            ui.add_space(5.0);
             ui.horizontal_centered(|ui| {
                 ui.spacing_mut().item_spacing.x = 4.0;
-                // Use the same vector icons as the Outlook-style ribbon, not text glyphs.
                 let actions = [
                     ("newMail", "Novo e-mail", "mail.new"),
                     ("delete", "Excluir", "mail.delete"),
@@ -355,6 +344,15 @@ pub fn sorriso_compact_toolbar(app: &mut MailApp, ui: &mut Ui) {
                     if response.clicked() {
                         let _ = app.run(command, json!({}));
                     }
+                }
+                // The mailbox search shares the same row as the action buttons.
+                // Keep a usable input width on compact windows and cap it on wide ones.
+                let available = ui.available_width();
+                if available >= 150.0 {
+                    ui.add_space(8.0);
+                    let width = ui.available_width().min(340.0);
+                    let (rect, _) = ui.allocate_exact_size(vec2(width, 35.0), Sense::hover());
+                    search_box(app, ui, rect);
                 }
             });
         });
