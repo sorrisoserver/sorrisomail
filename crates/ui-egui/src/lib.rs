@@ -3194,14 +3194,17 @@ impl MailApp {
         } else {
             // The module bar stands beside the tabs and the ribbon, from under the title bar down
             // to the status bar across the window's foot: both are laid out before the ribbon.
-            chrome::title_bar(self, ui);
+            // The native Windows caption already provides window controls; hide the redundant
+            // in-app quick-access/diagnostics title row. Keep integrated macOS controls.
+            if self.integrated_titlebar {
+                chrome::title_bar(self, ui);
+            }
             chrome::sorriso_brand_banner(self, ui);
             chrome::sync_bar_rest(self, ui.ctx());
             chrome::status_bar(self, ui);
             // The question about checking for new versions, at the first starts: above the status bar.
             updates::question(self, ui);
             nav::module_bar(self, ui);
-            chrome::sorriso_service_strip(self, ui);
             // Always show Outlook-style tabs and ribbon, including in Mail.
             // The mail module additionally shows its focused action/search toolbar.
             ribbon::show(self, ui);
