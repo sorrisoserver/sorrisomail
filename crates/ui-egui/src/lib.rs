@@ -594,7 +594,7 @@ impl Default for UiState {
             backstage_page: "info".into(),
             ribbon_collapsed: false,
             ribbon_mode: ribbon::Mode::default(),
-            theme: theme::Appearance::default(),
+            theme: theme::Appearance::Light,
             interface_size: theme::InterfaceSize::default(),
             window: None,
             language: i18n::AUTO.into(),
@@ -2766,7 +2766,7 @@ impl MailApp {
         let preference = self.ui.theme.preference(ctx.system_theme());
         // The existing saved "system" preference also selects our institutional palette.
         // This ensures upgrades from older installations show the new blue appearance.
-        let brand = matches!(self.ui.theme, theme::Appearance::Brand | theme::Appearance::System);
+        let brand = false;
         let was_brand = ctx.data(|d| d.get_temp::<bool>(egui::Id::new("sorriso_brand_theme")).unwrap_or(false));
         if self.applied_theme != Some(preference) || brand != was_brand {
             theme::apply_with_brand(ctx, preference, brand);
