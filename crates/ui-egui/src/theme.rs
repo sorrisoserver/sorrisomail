@@ -19,8 +19,9 @@ pub const APP_INK: Color32 = Color32::from_rgb(0x10, 0x7E, 0xC5);
 pub enum Appearance {
     Light,
     Dark,
-    #[default]
     System,
+    #[default]
+    Brand,
 }
 
 impl Appearance {
@@ -33,11 +34,12 @@ impl Appearance {
             Appearance::Light => "light",
             Appearance::Dark => "dark",
             Appearance::System => "system",
+            Appearance::Brand => "brand",
         }
     }
 
     pub fn from_code(code: &str) -> Option<Appearance> {
-        Appearance::ALL.into_iter().find(|a| a.code().eq_ignore_ascii_case(code.trim()))
+        [Appearance::Brand, Appearance::System, Appearance::Light, Appearance::Dark].into_iter().find(|a| a.code().eq_ignore_ascii_case(code.trim()))
     }
 
     /// The English label (translated with `tl!` where shown).
@@ -45,7 +47,7 @@ impl Appearance {
         match self {
             Appearance::Light => "Light",
             Appearance::Dark => "Dark",
-            Appearance::System => "Use system setting",
+            Appearance::System | Appearance::Brand => "Use system setting",
         }
     }
 
@@ -57,7 +59,7 @@ impl Appearance {
     /// rebuild the font atlas they share every frame, which garbles the text of both.
     pub fn preference(self, system: Option<egui::Theme>) -> egui::ThemePreference {
         match self {
-            Appearance::Light => egui::ThemePreference::Light,
+            Appearance::Brand | Appearance::Light => egui::ThemePreference::Light,
             Appearance::Dark => egui::ThemePreference::Dark,
             Appearance::System => match system {
                 Some(egui::Theme::Dark) => egui::ThemePreference::Dark,
@@ -285,8 +287,47 @@ impl Tokens {
             icon_purple: Color32::from_rgb(0xB6, 0x9B, 0xEE),
         }
     }
+    pub fn brand() -> Self {
+        let mut t = Self::light();
+        let navy = Color32::from_rgb(0x07, 0x38, 0x67);
+        let blue = Color32::from_rgb(0x13, 0x8E, 0xD2);
+        let soft = Color32::from_rgb(0xE2, 0xF1, 0xFA);
+        t.title_bar = navy;
+        t.tab_strip = navy;
+        t.nav = blue;
+        t.canvas = soft;
+        t.ribbon = soft;
+        t.panel = soft;
+        t.surface = Color32::WHITE;
+        t.status_bar = navy;
+        t.menu = Color32::WHITE;
+        t.border = Color32::from_rgb(0xB5, 0xD5, 0xE9);
+        t.border_strong = Color32::from_rgb(0x82, 0xB8, 0xD7);
+        t.text = navy;
+        t.text_dim = Color32::from_rgb(0x34, 0x61, 0x81);
+        t.icon = navy;
+        t.hover = Color32::from_rgb(0xC4, 0xE3, 0xF4);
+        t.pressed = Color32::from_rgb(0x9D, 0xD0, 0xEE);
+        t.checked = Color32::from_rgb(0xA7, 0xD7, 0xF3);
+        t.selection = Color32::from_rgb(0xC3, 0xE3, 0xF5);
+        t.accent = blue;
+        t.accent_text = Color32::from_rgb(0x07, 0x58, 0x95);
+        t.on_accent = Color32::WHITE;
+        t.input = Color32::WHITE;
+        t.input_border = Color32::from_rgb(0x82, 0xB8, 0xD7);
+        t.group_label = Color32::from_rgb(0x34, 0x61, 0x81);
+        t.today = soft;
+        t.off_hours = soft;
+        t
+    }
     pub fn get(ctx: &egui::Context) -> Tokens {
-        if ctx.global_style().visuals.dark_mode { Tokens::dark() } else { Tokens::light() }
+        if ctx.data(|d| d.get_temp::<bool>(egui::Id::new("sorriso_brand_theme")).unwrap_or(false)) {
+            Tokens::brand()
+        } else if ctx.global_style().visuals.dark_mode {
+            Tokens::dark()
+        } else {
+            Tokens::light()
+        }
     }
 }
 
@@ -584,8 +625,9 @@ pub fn paint_clipped(painter: &egui::Painter, pos: egui::Pos2, width: f32, text:
 /// Apply the interface theme to egui. Both palettes go in, our light one as egui's light style
 /// and our dark one as its dark style, and `preference` ([`Appearance::preference`]) pins egui
 /// (and the window decorations) to one of them.
-pub fn apply(ctx: &egui::Context, preference: egui::ThemePreference) {
-    ctx.set_visuals_of(egui::Theme::Light, visuals(&Tokens::light()));
+pub fn apply(ctx: &egui::Context, preference: egui::ThemePreference, brand: bool) {
+    ctx.data_mut(|d| d.insert_temp(egui::Id::new("sorriso_brand_theme"), brand));
+    ctx.set_visuals_of(egui::Theme::Light, visuals(&if brand { Tokens::brand() } else { Tokens::light() }));
     ctx.set_visuals_of(egui::Theme::Dark, visuals(&Tokens::dark()));
     ctx.all_styles_mut(|s| {
         s.spacing.item_spacing = egui::vec2(6.0, 4.0);
