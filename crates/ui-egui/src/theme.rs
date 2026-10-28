@@ -625,7 +625,11 @@ pub fn paint_clipped(painter: &egui::Painter, pos: egui::Pos2, width: f32, text:
 /// Apply the interface theme to egui. Both palettes go in, our light one as egui's light style
 /// and our dark one as its dark style, and `preference` ([`Appearance::preference`]) pins egui
 /// (and the window decorations) to one of them.
-pub fn apply(ctx: &egui::Context, preference: egui::ThemePreference, brand: bool) {
+pub fn apply(ctx: &egui::Context, preference: egui::ThemePreference) {
+    apply_with_brand(ctx, preference, false);
+}
+
+pub fn apply_with_brand(ctx: &egui::Context, preference: egui::ThemePreference, brand: bool) {
     ctx.data_mut(|d| d.insert_temp(egui::Id::new("sorriso_brand_theme"), brand));
     ctx.set_visuals_of(egui::Theme::Light, visuals(&if brand { Tokens::brand() } else { Tokens::light() }));
     ctx.set_visuals_of(egui::Theme::Dark, visuals(&Tokens::dark()));
