@@ -279,13 +279,20 @@ pub fn sorriso_brand_banner(app: &mut MailApp, ui: &mut Ui) {
             });
             ui.scope_builder(egui::UiBuilder::new().max_rect(actions), |ui| {
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    let secondary = egui::Button::new(egui::RichText::new("Novidades da versão").size(13.0).strong()
+                    let online = app.auto_sync;
+                    let label = if online { "Online" } else { "Offline" };
+                    let secondary = egui::Button::new(egui::RichText::new(label).size(13.0).strong()
                         .color(egui::Color32::WHITE))
-                        .fill(egui::Color32::from_rgb(7, 72, 137))
+                        .fill(if online { egui::Color32::from_rgb(7, 72, 137) } else { egui::Color32::from_rgb(80, 94, 114) })
                         .stroke(Stroke::new(1.0, egui::Color32::from_rgb(166,221,252)))
-                        .corner_radius(7.0).min_size(vec2(145.0, 38.0));
-                    if ui.add(secondary).clicked() {
-                        let _ = app.run("ui.backstage", json!({"value": true, "page": "about"}));
+                        .corner_radius(7.0).min_size(vec2(115.0, 38.0));
+                    if ui.add(secondary).on_hover_text("Alternar sincronização automática. O modo Offline pausa a sincronização periódica; operações manuais ainda podem usar a rede.").clicked() {
+                        app.auto_sync = !app.auto_sync;
+                        app.status(if app.auto_sync {
+                            "Modo Online: sincronização automática reativada.".to_string()
+                        } else {
+                            "Modo Offline: sincronização automática pausada. Ações manuais ainda podem acessar a rede.".to_string()
+                        });
                     }
                     let primary = egui::Button::new(egui::RichText::new("Verificar atualizações").size(13.0).strong()
                         .color(egui::Color32::from_rgb(5, 86, 169)))
