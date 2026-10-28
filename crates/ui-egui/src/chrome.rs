@@ -479,7 +479,7 @@ pub fn status_bar(app: &mut MailApp, ui: &mut Ui) {
                     Module::Mail => {
                         let shown = app.session.rows().len();
                         let folder = app.session.view.folder;
-                        st(ui, &tln!(shown, "{n} item", "{n} items"), t.text_dim);
+                        st(ui, &format!("{shown} itens"), t.text_dim);
                         let unread = app.session.mailbox.unread_count(folder);
                         if unread > 0 {
                             st(ui, &format!("Não lidas: {unread}"), t.text_dim);
@@ -537,7 +537,7 @@ pub fn status_bar(app: &mut MailApp, ui: &mut Ui) {
                     // The last Send/Receive had problems: one click shows them, in Send/Receive
                     // Progress under their accounts.
                     if app.has_sync_problems() {
-                        let link = ui.link(egui::RichText::new(tl!("Send/Receive problems")).size(STATUS_TEXT).color(t.red));
+                        let link = ui.link(egui::RichText::new("Problemas no envio/recebimento").size(STATUS_TEXT).color(t.red));
                         app.hit.add("syncProblemsLink", 0, link.rect);
                         if link.clicked() {
                             let _ = app.run("ui.dialog", json!({"name": "syncProblems"}));
