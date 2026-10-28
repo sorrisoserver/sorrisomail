@@ -39,7 +39,11 @@ impl Appearance {
     }
 
     pub fn from_code(code: &str) -> Option<Appearance> {
-        [Appearance::Brand, Appearance::System, Appearance::Light, Appearance::Dark].into_iter().find(|a| a.code().eq_ignore_ascii_case(code.trim()))
+        match code.trim().to_ascii_lowercase().as_str() {
+            "dark" => Some(Appearance::Dark),
+            "light" | "system" | "brand" => Some(Appearance::Light),
+            _ => None,
+        }
     }
 
     /// The English label (translated with `tl!` where shown).
