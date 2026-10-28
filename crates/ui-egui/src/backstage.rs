@@ -16,6 +16,7 @@ pub const PAGES: &[(&str, &str, &str)] = &[
     ("open", "Open & Export", "import"),
     ("options", "Options", "options"),
     ("signatures", "Signatures", "signature"),
+    ("license", "Licença de uso", "help"),
     ("about", "About", "help"),
 ];
 
@@ -75,6 +76,7 @@ pub fn show(app: &mut MailApp, ui: &mut Ui) {
                     "open" => open(app, ui, &t),
                     "options" => options(app, ui, &t),
                     "signatures" => crate::signatures::page(app, ui, &t),
+                    "license" => license_info(ui, &t),
                     "about" => about(app, ui, &t),
                     _ => info(app, ui, &t),
                 }
@@ -662,6 +664,19 @@ pub(crate) fn contributors(ui: &mut Ui) {
             ui.ctx().open_url(egui::OpenUrl::new_tab(CONTRIBUTORS_LINK));
         }
     });
+}
+
+fn license_info(ui: &mut Ui, t: &Tokens) {
+    heading(ui, "Licença comercial de uso", t);
+    section(ui, "Situação da licença", t);
+    ui.label("Versão de avaliação — ativação comercial ainda não habilitada.");
+    ui.label("Esta compilação não solicita nem valida chaves de licença.");
+    section(ui, "Próximas funções", t);
+    ui.label("Ativação por cliente, validade, renovação, período de tolerância offline e gestão das licenças.");
+    section(ui, "Atendimento", t);
+    ui.label("Sorriso Server — WhatsApp (66) 99685-7219");
+    section(ui, "Licenças de software livre", t);
+    ui.label("A licença comercial do produto não substitui os direitos e os avisos das dependências de código aberto.");
 }
 
 fn about(_app: &mut MailApp, ui: &mut Ui, t: &Tokens) {
