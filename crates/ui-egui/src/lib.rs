@@ -519,6 +519,8 @@ struct SigningIn {
 #[serde(default, rename_all = "camelCase")]
 pub struct UiState {
     pub tab: String,
+    /// When true, user-requested network activity is paused until back online.
+    pub offline: bool,
     pub backstage: bool,
     pub backstage_page: String,
     pub ribbon_collapsed: bool,
@@ -590,6 +592,7 @@ impl Default for UiState {
     fn default() -> Self {
         UiState {
             tab: "Home".into(),
+            offline: false,
             backstage: false,
             backstage_page: "info".into(),
             ribbon_collapsed: false,
@@ -1260,7 +1263,7 @@ impl MailApp {
         match self.session.registry.get(id) {
             Some(s) => (s.enabled)(&self.session).is_none(),
             None if id == "ui.sync" => {
-                self.session.enabled("sync.request")
+                !self.ui.offline && self.session.enabled("sync.request")
                     && self.services.sync.is_some()
                     && self.sync_rx.is_none()
                     && self.graph_rx.is_none()
@@ -1291,6 +1294,11 @@ impl MailApp {
             }
             self.dialog = dialogs::open_dialog(self, name, &params);
             return Ok(json!({"pending": name}));
+        }
+        if self.ui.offline && (id == "ui.checkForUpdates" || id == "ui.sync" || id == "sync.request") {
+            let message = "Modo offline: operações de rede suspensas.".to_string();
+            self.status(message.clone());
+            return Err(message);
         }
         // A message not fetched yet is fetched first, and then the command goes on (R3.2).
         if let Some(r) = self.fetch_first(id, &params) {
@@ -1827,6 +1835,7 @@ impl MailApp {
     /// password the first time, or has the owner sign in on the provider's page; the answer is
     /// kept in memory until the app closes, and by the operating system when that is wanted.
     fn start_sync(&mut self, p: &Value) -> Result<Value, String> {
+        if self.ui.offline { return Err("Modo offline: conecte-se para enviar ou receber mensagens.".into()); }
         if self.sync_rx.is_some() || self.graph_rx.is_some() {
             return Err(tl!("Send/Receive is already running").to_string());
         }
@@ -2076,6 +2085,7 @@ impl MailApp {
     /// round when the app starts and every few minutes after (the owner's `syncMinutes`). A round
     /// that started by itself skips accounts it would have to ask about.
     fn auto_sync(&mut self) {
+        if self.ui.offline { return; }
         // Something the owner did (a read mark, a move, a message to send) waits while a long run
         // is still bringing mail down: the run is called off, which loses nothing, and the next
         // one tells the server first.
