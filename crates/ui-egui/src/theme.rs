@@ -26,7 +26,7 @@ pub enum Appearance {
 
 impl Appearance {
     /// In menu order.
-    pub const ALL: [Appearance; 3] = [Appearance::System, Appearance::Light, Appearance::Dark];
+    pub const ALL: [Appearance; 2] = [Appearance::Light, Appearance::Dark];
 
     /// The value used in `ui.json` and by the `ui.theme` command.
     pub fn code(self) -> &'static str {
@@ -72,7 +72,7 @@ impl Appearance {
 /// An unknown saved value reads as the default rather than discarding the whole `ui.json`.
 impl From<String> for Appearance {
     fn from(s: String) -> Self {
-        Appearance::from_code(&s).unwrap_or_default()
+        match Appearance::from_code(&s).unwrap_or_default() { Appearance::Dark => Appearance::Dark, _ => Appearance::Light }
     }
 }
 
