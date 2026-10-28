@@ -261,11 +261,9 @@ pub fn sorriso_brand_banner(app: &mut MailApp, ui: &mut Ui) {
                 pos2(usable.left() + usable.width() * 0.66, usable.bottom()));
             let actions = egui::Rect::from_min_max(pos2(usable.left() + usable.width() * 0.67, usable.top()), usable.max);
             ui.scope_builder(egui::UiBuilder::new().max_rect(brand), |ui| {
-                ui.vertical(|ui| {
-                    ui.add_space(5.0);
+                ui.vertical_centered(|ui| {
+                    ui.add_space(11.0);
                     ui.label(egui::RichText::new("SorrisoServer Mail").size(22.0).strong().color(egui::Color32::WHITE));
-                        ui.label(egui::RichText::new("Sua Marca em cada Mensagem.").size(12.0)
-                            .color(egui::Color32::from_rgb(217,239,255)));
                 });
             });
             ui.scope_builder(egui::UiBuilder::new().max_rect(support), |ui| {
@@ -455,7 +453,7 @@ pub fn status_bar(app: &mut MailApp, ui: &mut Ui) {
                         st(ui, &tln!(shown, "{n} item", "{n} items"), t.text_dim);
                         let unread = app.session.mailbox.unread_count(folder);
                         if unread > 0 {
-                            st(ui, &crate::i18n::fmt(tl!("Unread: {n}"), &[("n", &unread.to_string())]), t.text_dim);
+                            st(ui, &format!("Não lidas: {unread}"), t.text_dim);
                         }
                         let picked = app.session.sel.messages.len();
                         if picked > 1 {
